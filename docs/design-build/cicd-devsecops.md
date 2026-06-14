@@ -113,12 +113,15 @@ Compliance is **measured**, not assumed:
 2. A scheduled **compliance scan** inspects every repository/pipeline and flags any that
    are not using the standard template or are missing required controls (no SAST, no
    image scan, no signing, etc.). Non-compliant repos are reported (and notified) daily.
-3. **Cluster admission policy** (e.g. Kyverno/Gatekeeper) **MAY** reject workloads that
-   fail baseline rules (unsigned images, no resource limits, no probes).
-4. The result feeds the project's
+3. The result feeds the project's
    [ServiceNow readiness record](../reference/servicenow-process.md).
-5. **DORA metrics** (deployment frequency, lead time, change-failure rate, MTTR) track
+4. **DORA metrics** (deployment frequency, lead time, change-failure rate, MTTR) track
    whether delivery is actually healthy over time.
+
+!!! note "Target state"
+    The compliance scan is the **intended** enforcement direction — automated tooling to
+    scan repositories **and deployed services** and flag non-compliant ones. The exact
+    approach is **still being defined (TBD).**
 
 ---
 
