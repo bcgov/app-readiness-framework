@@ -1,0 +1,3 @@
+# Build dependencies for the framework documentation site.
+# Pinned loosely; pin exact versions before first production publish.
+mkdocs-material>=9.5

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" role="img" aria-label="Framework logo">
+  <path d="M20 3 L33 8 V19 C33 28 27.5 34 20 37 C12.5 34 7 28 7 19 V8 Z"
+        fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M12.5 20.2 l5 5 L27.5 14" stroke="#FCBA19" stroke-width="3.2"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

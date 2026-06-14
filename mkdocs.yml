@@ -1,0 +1,112 @@
+site_name: Application Development, Readiness & Resilience Framework
+site_description: >-
+  Guardrails for building, hardening, and handing over supportable, resilient
+  applications. Applies to internal teams, contractors, and vendors.
+site_author: Architecture & Platform Engineering
+copyright: Internal use only — Government of British Columbia
+
+site_url: https://bcgov.github.io/app-readiness-framework/
+
+theme:
+  name: material
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  features:
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+    admonition:
+      note: material/lightbulb-outline
+
+repo_name: bcgov/app-readiness-framework
+repo_url: https://github.com/bcgov/app-readiness-framework
+edit_uri: edit/main/docs/
+
+plugins:
+  - search
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+  status:
+    new: Recently added
+    draft: Draft — under review
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Start Here: start-here.md
+  - Principles:
+      - Criticality Tiers: principles/criticality-tiers.md
+  - Design & Build:
+      - CI/CD & DevSecOps: design-build/cicd-devsecops.md
+      - Application Resilience: design-build/application-resilience.md
+      - Non-Functional Requirements: design-build/nfrs.md
+  - Readiness & Handover:
+      - Production Readiness Review: readiness/production-readiness-review.md
+  - Reference:
+      - ServiceNow Process: reference/servicenow-process.md
+      - Standards & Links: reference/standards-links.md
