@@ -245,3 +245,39 @@
   font-size: .74rem;
   color: var(--md-default-fg-color--light);
 }
+
+/* ---- Portfolio dashboard ---------------------------------------------- */
+.arr-dash-band {
+  display: flex; align-items: center; gap: .8rem;
+  background: var(--arr-blue); color: #fff;
+  border-radius: 10px; padding: .9rem 1.2rem;
+  border-bottom: 3px solid var(--arr-gold);
+  margin: 1.2rem 0 1.4rem;
+}
+.arr-dash-band__icon { font-size: 1.5rem; }
+.arr-dash-band__title { font-weight: 700; font-size: 1.05rem; }
+.arr-dash-band__sub { color: #b5d4f4; font-size: .8rem; }
+
+.arr-metric-grid {
+  display: grid; gap: .7rem; margin-bottom: 1.1rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+.arr-metric {
+  background: var(--md-default-fg-color--lightest);
+  border-radius: 8px; padding: .9rem 1rem;
+}
+.arr-metric__label { font-size: .78rem; color: var(--md-default-fg-color--light); }
+.arr-metric__value { font-size: 1.7rem; font-weight: 700; line-height: 1.2; }
+
+.arr-chart-grid {
+  display: grid; gap: .8rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.arr-chart-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 10px; padding: 1rem 1.1rem;
+}
+.arr-chart-card--wide { grid-column: 1 / -1; }
+.arr-chart-card__title { font-weight: 700; font-size: .9rem; margin-bottom: .6rem; }
+.arr-chart-card__canvas { position: relative; width: 100%; height: 240px; }
