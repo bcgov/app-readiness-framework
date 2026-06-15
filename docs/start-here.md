@@ -44,7 +44,7 @@ Before solutioning is locked in:
 - Use the **standard [CI/CD pipeline template](design-build/cicd-devsecops.md)** — it
   bakes in the mandatory controls (tests + coverage, SAST, SCA, secret scanning, image
   scanning, **SBOM**, artifact **signing**) so you don't assemble them yourself.
-- No secrets in source; pull runtime secrets from a secrets manager.
+- No secrets in source or environment variables with literal values — all runtime secrets **MUST** be stored in and injected from **HashiCorp Vault**.
 - Ship structured logs and metrics from day one — observability is not a go-live add-on.
 
 ### Step 4 — Prove it and hand it over (before go-live)

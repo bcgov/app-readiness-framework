@@ -57,8 +57,12 @@ This operationalises "shift-left security":
 - **Software supply chain** — produce an **SBOM**, **sign** artifacts, and generate
   **build provenance** (SLSA) so we can verify what we deploy and respond to the next
   dependency-level incident.
-- **Secrets** — never in code; injected at runtime from a secrets manager / sealed
-  secrets. Secret scanning blocks accidental commits.
+- **Secrets** — never in code or environment variables with literal values. All
+  runtime secrets **MUST** be stored in and injected from **HashiCorp Vault**
+  (via the Vault Agent Injector or CSI Secrets Store driver on OpenShift).
+  Kubernetes Secrets alone are not sufficient — they are base64-encoded, not
+  encrypted at rest by default. Secret scanning in the pipeline blocks accidental
+  commits.
 
 ## Build once, promote the same artifact
 
@@ -135,4 +139,4 @@ Compliance is **measured**, not assumed:
 - [ ] DAST/OWASP for web apps (Tier 1 MUST)
 - [ ] Immutable artifact built once, promoted dev → test → prod
 - [ ] Helm + GitOps; automated rollback; progressive delivery for Tier 1/2
-- [ ] No secrets in repo; runtime secrets from a manager
+- [ ] No secrets in repo or env vars; all runtime secrets stored in and injected from **Vault**

@@ -37,7 +37,7 @@ solution — existing features as well as new — not just the delta.*
 - [ ] Test coverage meets the tier threshold — link to report
 - [ ] SAST, SCA, secret scan, image scan all passing — no unresolved criticals/highs
 - [ ] **SBOM** generated; artifacts **signed**; provenance available (Tier 1/2)
-- [ ] No secrets in source; runtime secrets from a secrets manager
+- [ ] No secrets in source or env vars; all runtime secrets stored in and injected from **HashiCorp Vault** (Vault Agent Injector or CSI driver)
 
 ## 3. Resilience (confirms [Application Resilience](../design-build/application-resilience.md))
 - [ ] Stateless / session externalised
