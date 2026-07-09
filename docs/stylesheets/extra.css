@@ -445,8 +445,10 @@
   .md-header, .md-tabs, .md-sidebar, .md-footer, .md-content__button,
   .md-source, .md-nav, .arr-hero { display: none !important; }
   .md-typeset > *:not(#arr-gen) { display: none !important; }
-  #arr-gen > *:not(.arr-onepager) { display: none !important; }
-  .arr-onepager, .arr-op-sheet { display: block !important; }
+  .arr-gen-form { display: none !important; }
+  .arr-gen-out > *:not(.arr-onepager) { display: none !important; }
+  #arr-gen, .arr-gen-out, .arr-onepager, .arr-op-sheet { display: block !important; }
+  .arr-onepager[hidden] { display: none !important; }
   .arr-op-actions { display: none !important; }
   .arr-op-sheet { border: 0; padding: 0; }
   .md-main, .md-content, .md-content__inner, .md-grid {
