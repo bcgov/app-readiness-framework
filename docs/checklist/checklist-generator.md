@@ -82,7 +82,7 @@ You don't need to read the whole site — you leave here with a task list. The f
 
 1. **Generate & review** — answer the questions, then go down the checklist and **tick what's already done**. Click **`details ↗`** on anything unclear to read the guidance.
 2. **Create the one-pager** — hit *Create one-pager of remaining items* to get a clean sheet of only what's left.
-3. **Take it to your tool** — *Open PDF*, *Copy as text*, or the *ServiceNow .csv*, then add those items as tasks in **ServiceNow** (or whatever your team uses).
+3. **Take it to your tool** — *Export PDF*, *Copy as text*, or the *ServiceNow .csv*, then add those items as tasks in **ServiceNow** (or whatever your team uses).
 4. **Do the work** — each item's **Evidence** line tells you what proves it's done.
 5. **Prove it at handover** — the completed checklist *is* your [Production Readiness Review](../readiness/production-readiness-review.md); sign-off is recorded in the [ServiceNow readiness record](../reference/servicenow-process.md) and linked to the CMDB.
 
