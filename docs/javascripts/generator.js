@@ -428,10 +428,10 @@
 
     function fieldBox(fx, fy, fw, fh, name) {          // underline + text field
       doc.setDrawColor(170, 170, 170); doc.setLineWidth(0.5);
-      doc.line(fx, fy, fx + fw, fy);
+      doc.line(fx, fy + 2, fx + fw, fy + 2);
       if (editable) {
         var t = new TF(); t.fieldName = name + "_" + (fld++);
-        t.Rect = [fx, fy - fh, fw, fh]; t.fontSize = 8; t.value = "";
+        t.Rect = [fx, fy - 11, fw, 15]; t.fontSize = 11; t.value = "";
         doc.addField(t);
       }
     }
@@ -477,15 +477,16 @@
         var tLines = doc.splitTextToSize(pdfSafe(r.item.title), W - 62);
         doc.setFont("helvetica", "normal"); doc.setFontSize(8);
         var wLines = doc.splitTextToSize(pdfSafe("Why: " + r.item.why), W - 20);
-        var blockH = tLines.length * 12 + wLines.length * 9.5 + 34;
+        var blockH = tLines.length * 12 + wLines.length * 9.5 + 50;
         ensure(blockH);
         var top = y;
 
         if (CB) {
           var cb = new CB(); cb.fieldName = "chk_" + (fld++);
-          cb.Rect = [x0, top - 9, 11, 11]; cb.appearanceState = "Off"; doc.addField(cb);
+          cb.Rect = [x0, top - 9.5, 12, 12]; cb.caption = "4"; cb.appearanceState = "Off";
+          doc.addField(cb);
         } else {
-          doc.setDrawColor(90, 90, 90); doc.setLineWidth(0.9); doc.rect(x0, top - 8.5, 10.5, 10.5);
+          doc.setDrawColor(90, 90, 90); doc.setLineWidth(0.9); doc.rect(x0, top - 8.5, 11, 11);
         }
         // obligation tag (right-aligned, first line)
         doc.setFont("helvetica", "bold"); doc.setFontSize(7);
@@ -498,14 +499,14 @@
         // why
         doc.setFont("helvetica", "normal"); doc.setFontSize(8); setText(GRAY);
         wLines.forEach(function (ln) { doc.text(ln, x0 + 20, y); y += 9.5; });
-        y += 6;
+        y += 10;
         // fillable owner / target / notes
-        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); setText(NAVY);
-        doc.text("Owner", x0 + 20, y); fieldBox(x0 + 52, y, 150, 10, "owner");
-        doc.text("Target date", x0 + 232, y); fieldBox(x0 + 292, y, 78, 10, "target");
-        y += 14;
-        doc.text("Notes", x0 + 20, y); fieldBox(x0 + 52, y, W - 52, 10, "notes");
-        y += 12;
+        doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); setText(NAVY);
+        doc.text("Owner", x0 + 20, y); fieldBox(x0 + 58, y, 150, 15, "owner");
+        doc.text("Target date", x0 + 232, y); fieldBox(x0 + 300, y, 82, 15, "target");
+        y += 20;
+        doc.text("Notes", x0 + 20, y); fieldBox(x0 + 58, y, W - 58, 15, "notes");
+        y += 16;
         doc.setDrawColor(232, 232, 232); doc.setLineWidth(0.5); doc.line(x0, y, x0 + W, y); y += 10;
       });
       y += 6;
@@ -520,10 +521,10 @@
       ensure(26);
       doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); setText(INK);
       doc.text(role, x0, y);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); setText(NAVY);
-      doc.text("Name", x0 + 150, y); fieldBox(x0 + 182, y, 175, 11, "signoff_name");
-      doc.text("Date", x0 + 372, y); fieldBox(x0 + 400, y, 83, 11, "signoff_date");
-      y += 24;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); setText(NAVY);
+      doc.text("Name", x0 + 150, y); fieldBox(x0 + 184, y, 173, 15, "signoff_name");
+      doc.text("Date", x0 + 372, y); fieldBox(x0 + 402, y, 81, 15, "signoff_date");
+      y += 26;
     });
 
     // ---------- footer + page numbers ----------
