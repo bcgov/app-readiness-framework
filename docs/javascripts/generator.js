@@ -488,7 +488,7 @@
   function onePagerHtml(cfg, rows) {
     var by = group(rows);
     var h = '<div class="arr-op-actions">' +
-      '<button class="md-button md-button--primary arr-op-pdf">Export PDF</button>' +
+      '<button class="md-button md-button--primary arr-op-pdf">Export as PDF</button>' +
       '<button class="md-button arr-op-copy">Copy as text</button>' +
       '<span class="arr-op-note">Add these to ServiceNow, JIRA, or your tool of choice.</span></div>' +
       '<div class="arr-op-sheet"><div class="arr-op-title"><h2>Remaining readiness items</h2>' +
