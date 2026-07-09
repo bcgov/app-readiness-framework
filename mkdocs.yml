@@ -65,6 +65,7 @@ extra_css:
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js
   - javascripts/dashboard.js
+  - javascripts/generator.js
 
 extra:
   generator: false
@@ -103,15 +104,21 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Start Here: start-here.md
+  - Build Your Checklist: checklist/checklist-generator.md
   - Portfolio Dashboard: dashboard.md
   - Principles:
       - Criticality Tiers: principles/criticality-tiers.md
   - Design & Build:
+      - Non-Functional Requirements: design-build/nfrs.md
       - CI/CD & DevSecOps: design-build/cicd-devsecops.md
       - Application Resilience: design-build/application-resilience.md
-      - Non-Functional Requirements: design-build/nfrs.md
+      - Security & Privacy: design-build/security-privacy.md
+      - Observability: design-build/observability.md
+      - Data Management: design-build/data-management.md
   - Readiness & Handover:
       - Production Readiness Review: readiness/production-readiness-review.md
+  - Templates & Starters: starters/index.md
   - Reference:
       - ServiceNow Process: reference/servicenow-process.md
+      - Compliance & Enforcement: reference/compliance-enforcement.md
       - Standards & Links: reference/standards-links.md

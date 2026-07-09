@@ -5,11 +5,22 @@
     intake forms, template repos) are placeholders — replace the `TODO` items with real
     URLs from your environment.
 
-## Internal standards & resources (TODO)
-- [ ] Standard **pipeline template** repo — `TODO`
-- [ ] Standard **Helm chart** repo — `TODO`
-- [ ] **ADR template** — `TODO`
-- [ ] **Runbook template** — `TODO`
+### Ready to use (in this framework)
+These starters ship with the framework — copy them from the
+[Templates & Starters](../starters/index.md) page:
+
+- [x] **ADR template** — [Templates → ADR](../starters/index.md#architecture-decision-record-adr)
+- [x] **Runbook template** — [Templates → Runbook](../starters/index.md#runbook)
+- [x] **NFR worksheet** — [Templates → NFR worksheet](../starters/index.md#nfr-worksheet)
+- [x] **Starter CI/CD pipeline** — [Templates → CI/CD](../starters/index.md#starter-cicd-pipeline)
+- [x] **Helm deployment (resilience defaults)** — [Templates → Helm](../starters/index.md#helm-deployment-resilience-defaults)
+- [x] **PR template + CODEOWNERS** — [Templates](../starters/index.md#pull-request-template)
+
+### Environment-specific links (TODO — add real URLs)
+Point these at the canonical repos / intake forms in your environment:
+
+- [ ] Canonical **pipeline template** repo (versioned) — `TODO`
+- [ ] Canonical **Helm chart** repo (versioned) — `TODO`
 - [ ] **STRA** intake — `TODO`
 - [ ] **PIA** intake — `TODO`
 - [ ] **CMDB** registration process — `TODO`

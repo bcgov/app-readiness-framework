@@ -13,9 +13,16 @@ hide:
 <p class="arr-tagline">Guardrails for building, hardening, and handing over applications that are
 <strong>supportable, secure, and resilient</strong> — for internal teams, contractors, and vendors alike.</p>
 
-[Start here — how to use this](start-here.md){ .md-button .md-button--primary }
-[Application resilience](design-build/application-resilience.md){ .md-button }
+[Build your checklist](checklist/checklist-generator.md){ .md-button .md-button--primary }
+[Start here — how to use this](start-here.md){ .md-button }
 [Production readiness review](readiness/production-readiness-review.md){ .md-button }
+</div>
+
+<div class="arr-cta" markdown>
+<div class="arr-cta__text" markdown>
+:material-clipboard-check-outline:{ .lg } &nbsp; **Building, retrofitting, or handing over an app?** Answer six questions, tick off what's already done, and walk away with a one-pager of what's left — no need to read the whole site.
+</div>
+[Build your checklist →](checklist/checklist-generator.md){ .md-button .md-button--primary }
 </div>
 
 !!! tip "Use this at the *start* of a project, not the end"
@@ -43,6 +50,15 @@ teams build the right thing the first time.
 ## Explore the framework
 
 <div class="grid cards" markdown>
+
+-   :material-clipboard-check-outline:{ .lg .middle } &nbsp; __Build your checklist__
+
+    ---
+
+    Answer six questions → a right-sized checklist you tick off → a one-pager of what's
+    left. The fastest way in.
+
+    [:octicons-arrow-right-24: Start the checklist](checklist/checklist-generator.md)
 
 -   :material-layers-triple:{ .lg .middle } &nbsp; __Criticality tiers__
 
@@ -97,6 +113,33 @@ teams build the right thing the first time.
     "who applied it to which project" audit trail.
 
     [:octicons-arrow-right-24: The process](reference/servicenow-process.md)
+
+-   :material-shield-lock:{ .lg .middle } &nbsp; __Security &amp; privacy__
+
+    ---
+
+    Auth models (IDIR / Keycloak / BC Services Card), access management, data
+    classification, STRA/PIA, encryption, and vulnerability-management SLAs.
+
+    [:octicons-arrow-right-24: Secure it by design](design-build/security-privacy.md)
+
+-   :material-chart-line:{ .lg .middle } &nbsp; __Observability__
+
+    ---
+
+    Metrics in Sysdig, structured logs to the Hive, tracing, SLIs/SLOs, and alerts
+    that are actionable and routed to the on-call owner.
+
+    [:octicons-arrow-right-24: Make it observable](design-build/observability.md)
+
+-   :material-database-cog:{ .lg .middle } &nbsp; __Data management__
+
+    ---
+
+    Governance roles, classification, records management, retention/archival/deletion,
+    data interoperability, and reporting — the data outlives the app.
+
+    [:octicons-arrow-right-24: Govern the data](design-build/data-management.md)
 
 </div>
 

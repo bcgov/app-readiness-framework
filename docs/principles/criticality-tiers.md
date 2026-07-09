@@ -41,7 +41,7 @@ on each topic page.
 | **Multiple replicas + PodDisruptionBudget** | MAY | MUST | MUST |
 | **HA database / replication** | MAY | SHOULD | MUST |
 | **Disaster recovery plan + tested restore** | SHOULD | MUST | MUST |
-| **[Observability](#)** (metrics, logs, traces) + alerting | SHOULD | MUST | MUST |
+| **[Observability](../design-build/observability.md)** (metrics, logs, traces) + alerting | SHOULD | MUST | MUST |
 | **SLIs/SLOs + error budget** | MAY | SHOULD | MUST |
 | **Load / performance test evidence** | MAY | SHOULD | MUST |
 | **Chaos / failover test evidence** | — | SHOULD | MUST |

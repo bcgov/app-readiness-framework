@@ -53,7 +53,7 @@ applications unsupportable later.
 
 ### Security & privacy
 - Data classification / sensitivity; internal vs public-facing.
-- Authentication & authorization model (see Security & Privacy).
+- Authentication & authorization model (see [Security & Privacy](security-privacy.md)).
 - Compliance obligations (privacy/FOIPPA, retention, residency).
 
 ### Usability & accessibility
@@ -68,7 +68,7 @@ applications unsupportable later.
 
 ### Interoperability & data
 - Integrations / APIs and their own availability needs.
-- Data lifecycle: retention, archival, deletion (see Data Management).
+- Data lifecycle: retention, archival, deletion (see [Data Management](data-management.md)).
 
 ---
 

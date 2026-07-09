@@ -43,8 +43,8 @@ Every pipeline **MUST** include the following stages, and they **MUST** be able 
 | **SBOM** | Software bill of materials | CycloneDX / SPDX | Tier1/2 MUST, Tier3 SHOULD |
 | **Artifact signing + provenance** | Signed image + build provenance | cosign / Sigstore, SLSA | Tier1/2 MUST |
 
-> See [Security & Privacy](#) for vulnerability-management SLAs (how fast findings of
-> each severity must be fixed).
+> See [Security & Privacy](security-privacy.md#5-vulnerability-management) for
+> vulnerability-management SLAs (how fast findings of each severity must be fixed).
 
 ## Security by design in the pipeline
 
@@ -122,10 +122,16 @@ Compliance is **measured**, not assumed:
 4. **DORA metrics** (deployment frequency, lead time, change-failure rate, MTTR) track
    whether delivery is actually healthy over time.
 
-!!! note "Target state"
-    The compliance scan is the **intended** enforcement direction — automated tooling to
-    scan repositories **and deployed services** and flag non-compliant ones. The exact
-    approach is **still being defined (TBD).**
+The full design — what's checked, how repos are identified, the notification and
+ServiceNow feedback loop, and the report-first rollout — is on the
+**[Compliance & Enforcement](../reference/compliance-enforcement.md)** page. The scan
+itself ships as a runnable starter:
+[Templates & Starters → Compliance scan](../starters/index.md#compliance-scan-scheduled).
+
+!!! note "Rollout"
+    The scan starts **report-only** (piloted on CSA, then the OpenShift fleet as a gap
+    assessment) and moves to **gate-blocking** once teams have had time to close gaps —
+    so it surfaces problems before it starts stopping merges.
 
 ---
 
