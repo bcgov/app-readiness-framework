@@ -401,43 +401,144 @@
     return String(s).replace(/≥/g, ">=").replace(/×/g, "x").replace(/→/g, "->");
   }
 
-  // Build the one-pager as a real PDF and open it in a new browser tab.
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function todayStr() {
+    try { var d = new Date(); return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+    catch (e) { return ""; }
+  }
+
+  // Build a branded, fillable readiness checklist PDF (AcroForm) and open it.
   function openPdf(cfg, rows) {
     var J = window.jspdf && window.jspdf.jsPDF;
-    if (!J) { window.print(); return; }          // fallback if the lib didn't load
+    if (!J) { window.print(); return; }
+    var CB = window.jspdf.AcroFormCheckBox || J.AcroFormCheckBox;
+    var TF = window.jspdf.AcroFormTextField || J.AcroFormTextField;
+    var editable = !!(CB && TF);
+
     var doc = new J({ unit: "pt", format: "letter" });
-    var pw = doc.internal.pageSize.getWidth();
-    var ph = doc.internal.pageSize.getHeight();
-    var mx = 48, my = 54, x = mx, maxw = pw - mx * 2, y = my;
-    function room(h) { if (y + (h || 0) > ph - my) { doc.addPage(); y = my; } }
-    function para(text, size, style, rgb, indent, lh) {
-      doc.setFont("helvetica", style); doc.setFontSize(size);
-      doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-      doc.splitTextToSize(pdfSafe(text), maxw - (indent || 0)).forEach(function (ln) {
-        room(lh); doc.text(ln, x + (indent || 0), y); y += lh;
-      });
+    var PW = doc.internal.pageSize.getWidth(), PH = doc.internal.pageSize.getHeight();
+    var ML = 42, MR = 42, MB = 44, W = PW - ML - MR, x0 = ML;
+    var NAVY = [0, 51, 102], GOLD = [252, 186, 25], INK = [27, 39, 51], GRAY = [120, 120, 120];
+    var app = cfg.app || "Application", date = todayStr(), fld = 0, y = 0;
+
+    function setFill(c) { doc.setFillColor(c[0], c[1], c[2]); }
+    function setText(c) { doc.setTextColor(c[0], c[1], c[2]); }
+    function newPage() { doc.addPage(); y = 52; }
+    function ensure(h) { if (y + h > PH - MB) newPage(); }
+
+    function fieldBox(fx, fy, fw, fh, name) {          // underline + text field
+      doc.setDrawColor(170, 170, 170); doc.setLineWidth(0.5);
+      doc.line(fx, fy, fx + fw, fy);
+      if (editable) {
+        var t = new TF(); t.fieldName = name + "_" + (fld++);
+        t.Rect = [fx, fy - fh, fw, fh]; t.fontSize = 8; t.value = "";
+        doc.addField(t);
+      }
     }
-    para("Remaining readiness items", 18, "bold", [0, 51, 102], 0, 22);
-    doc.setDrawColor(252, 186, 25); doc.setLineWidth(2); doc.line(x, y, x + maxw, y); y += 16;
-    para(cfg.app || "Application", 12, "bold", [26, 90, 150], 0, 15);
-    para(metaLine(cfg) + "  ·  " + rows.length + " items to action", 9, "normal", [110, 110, 110], 0, 11);
-    y += 10;
+
+    // ---------- header (page 1) ----------
+    setFill(NAVY); doc.rect(0, 0, PW, 78, "F");
+    setFill(GOLD); doc.rect(0, 78, PW, 3, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); setText(GOLD);
+    doc.text("APPLICATION DEVELOPMENT, READINESS & RESILIENCE FRAMEWORK", ML, 30);
+    doc.setFontSize(19); setText([255, 255, 255]);
+    doc.text("Application Readiness Checklist", ML, 58);
+
+    // ---------- metadata ----------
+    y = 102;
+    function meta(label, val) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(9); setText(NAVY);
+      doc.text(label, x0, y);
+      doc.setFont("helvetica", "normal"); setText([45, 45, 45]);
+      doc.text(pdfSafe(val), x0 + doc.getTextWidth(label) + 10, y); y += 15;
+    }
+    meta("Application:", app);
+    meta("Tier:", tierLabel(cfg.tier));
+    meta("Profile:", (cfg.facing === "public" ? "Public-facing" : "Internal") + "   ·   " +
+      platformLabel(cfg.platform) + "   ·   " + (cfg.delivery === "vendor" ? "Vendor-built" : "Internal team") +
+      (cfg.build === "existing" ? "   ·   retrofit" : ""));
+    doc.setFont("helvetica", "bold"); setText(NAVY); doc.text("Generated:", x0, y);
+    doc.setFont("helvetica", "normal"); setText([45, 45, 45]); doc.text(date, x0 + 60, y);
+    doc.setFont("helvetica", "bold"); setText(NAVY); doc.text("Prepared by:", x0 + 250, y);
+    fieldBox(x0 + 318, y, 165, 11, "prepared_by"); y += 20;
+    doc.setDrawColor(210, 210, 210); doc.setLineWidth(0.5); doc.line(x0, y, x0 + W, y); y += 18;
+
+    // ---------- checklist ----------
     var by = group(rows);
     SECTIONS.forEach(function (s) {
-      var items = by[s[0]];
-      if (!items || !items.length) return;
-      room(46);
-      para(s[1] + "  (Gate " + s[2] + ")", 12, "bold", [0, 51, 102], 0, 16);
+      var items = by[s[0]]; if (!items || !items.length) return;
+      ensure(30);
+      setFill(NAVY); doc.rect(x0, y, W, 17, "F");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); setText([255, 255, 255]);
+      doc.text(s[1] + "     Gate " + s[2], x0 + 7, y + 12); y += 25;
+
       items.forEach(function (r) {
-        para("[ ]  " + LABELS[r.ob].toUpperCase() + "  —  " + r.item.title, 10, "bold", [27, 39, 51], 0, 12);
-        para("Why: " + r.item.why, 9, "normal", [110, 110, 110], 14, 10);
-        y += 5;
+        doc.setFont("helvetica", "bold"); doc.setFontSize(9.5);
+        var tLines = doc.splitTextToSize(pdfSafe(r.item.title), W - 62);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(8);
+        var wLines = doc.splitTextToSize(pdfSafe("Why: " + r.item.why), W - 20);
+        var blockH = tLines.length * 12 + wLines.length * 9.5 + 34;
+        ensure(blockH);
+        var top = y;
+
+        doc.setDrawColor(90, 90, 90); doc.setLineWidth(0.8); doc.rect(x0, top - 8.5, 11, 11);
+        if (editable) {
+          var cb = new CB(); cb.fieldName = "chk_" + (fld++);
+          cb.Rect = [x0, top - 8.5, 11, 11]; cb.appearanceState = "Off"; doc.addField(cb);
+        }
+        // obligation tag (right-aligned, first line)
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+        setText(r.ob === "M" ? [163, 45, 45] : [133, 79, 11]);
+        doc.text(LABELS[r.ob].toUpperCase(), x0 + W, top, { align: "right" });
+        // title
+        doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); setText(INK);
+        tLines.forEach(function (ln, i) { doc.text(ln, x0 + 20, top + i * 12); });
+        y = top + tLines.length * 12 + 2;
+        // why
+        doc.setFont("helvetica", "normal"); doc.setFontSize(8); setText(GRAY);
+        wLines.forEach(function (ln) { doc.text(ln, x0 + 20, y); y += 9.5; });
+        y += 6;
+        // fillable owner / target / notes
+        doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); setText(NAVY);
+        doc.text("Owner", x0 + 20, y); fieldBox(x0 + 52, y, 150, 10, "owner");
+        doc.text("Target date", x0 + 232, y); fieldBox(x0 + 292, y, 78, 10, "target");
+        y += 14;
+        doc.text("Notes", x0 + 20, y); fieldBox(x0 + 52, y, W - 52, 10, "notes");
+        y += 12;
+        doc.setDrawColor(232, 232, 232); doc.setLineWidth(0.5); doc.line(x0, y, x0 + W, y); y += 10;
       });
       y += 6;
     });
-    var name = slug(cfg.app || "application") + "-readiness-one-pager.pdf";
+
+    // ---------- sign-off ----------
+    ensure(30);
+    setFill(NAVY); doc.rect(x0, y, W, 17, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); setText([255, 255, 255]);
+    doc.text("Sign-off     go-live approval", x0 + 7, y + 12); y += 27;
+    ["Product Owner", "Architecture", "Operations / SRE", "Security & Privacy"].forEach(function (role) {
+      ensure(26);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); setText(INK);
+      doc.text(role, x0, y);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); setText(NAVY);
+      doc.text("Name", x0 + 150, y); fieldBox(x0 + 182, y, 175, 11, "signoff_name");
+      doc.text("Date", x0 + 372, y); fieldBox(x0 + 400, y, 83, 11, "signoff_date");
+      y += 24;
+    });
+
+    // ---------- footer + page numbers ----------
+    var pages = doc.internal.getNumberOfPages();
+    for (var p = 1; p <= pages; p++) {
+      doc.setPage(p);
+      doc.setDrawColor(220, 220, 220); doc.setLineWidth(0.5); doc.line(ML, PH - 32, PW - MR, PH - 32);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); setText(GRAY);
+      doc.text("Application Readiness Checklist   ·   " + pdfSafe(app), ML, PH - 20);
+      doc.text("Page " + p + " of " + pages, PW - MR, PH - 20, { align: "right" });
+      doc.text("bcgov.github.io/app-readiness-framework   ·   Generated " + date, ML, PH - 11);
+    }
+
+    var name = slug(cfg.app || "application") + "-readiness-checklist.pdf";
     var w = window.open(doc.output("bloburl"), "_blank");
-    if (!w) { doc.save(name); }   // popup blocked -> fall back to a download
+    if (!w) { doc.save(name); }
   }
 
   /* --- labels ------------------------------------------------------------ */
