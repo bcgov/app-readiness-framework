@@ -401,8 +401,8 @@
     return String(s).replace(/≥/g, ">=").replace(/×/g, "x").replace(/→/g, "->");
   }
 
-  // Build the one-pager as a real PDF and download it directly (no print dialog).
-  function downloadPdf(cfg, rows) {
+  // Build the one-pager as a real PDF and open it in a new browser tab.
+  function openPdf(cfg, rows) {
     var J = window.jspdf && window.jspdf.jsPDF;
     if (!J) { window.print(); return; }          // fallback if the lib didn't load
     var doc = new J({ unit: "pt", format: "letter" });
@@ -435,7 +435,9 @@
       });
       y += 6;
     });
-    doc.save(slug(cfg.app || "application") + "-readiness-one-pager.pdf");
+    var name = slug(cfg.app || "application") + "-readiness-one-pager.pdf";
+    var w = window.open(doc.output("bloburl"), "_blank");
+    if (!w) { doc.save(name); }   // popup blocked -> fall back to a download
   }
 
   /* --- labels ------------------------------------------------------------ */
@@ -486,7 +488,7 @@
   function onePagerHtml(cfg, rows) {
     var by = group(rows);
     var h = '<div class="arr-op-actions">' +
-      '<button class="md-button md-button--primary arr-op-pdf">Download PDF</button>' +
+      '<button class="md-button md-button--primary arr-op-pdf">Open PDF</button>' +
       '<button class="md-button arr-op-copy">Copy as text</button>' +
       '<span class="arr-op-note">Add these to ServiceNow, JIRA, or your tool of choice.</span></div>' +
       '<div class="arr-op-sheet"><div class="arr-op-title"><h2>Remaining readiness items</h2>' +
@@ -591,7 +593,7 @@
       var panel = out.querySelector(".arr-onepager");
       panel.innerHTML = onePagerHtml(cfg, rows);
       panel.hidden = false;
-      panel.querySelector(".arr-op-pdf").addEventListener("click", function () { downloadPdf(cfg, rows); });
+      panel.querySelector(".arr-op-pdf").addEventListener("click", function () { openPdf(cfg, rows); });
       var cp = panel.querySelector(".arr-op-copy");
       if (cp) cp.addEventListener("click", function () { copyText(cp, toPlainText(cfg, rows)); });
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
