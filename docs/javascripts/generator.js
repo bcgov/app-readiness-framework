@@ -411,6 +411,7 @@
   function openPdf(cfg, rows) {
     var J = window.jspdf && window.jspdf.jsPDF;
     if (!J) { window.print(); return; }
+    var CB = window.jspdf.AcroFormCheckBox || J.AcroFormCheckBox;
     var TF = window.jspdf.AcroFormTextField || J.AcroFormTextField;
     var editable = !!TF;
 
@@ -480,7 +481,12 @@
         ensure(blockH);
         var top = y;
 
-        doc.setDrawColor(90, 90, 90); doc.setLineWidth(0.9); doc.rect(x0, top - 8.5, 10.5, 10.5);
+        if (CB) {
+          var cb = new CB(); cb.fieldName = "chk_" + (fld++);
+          cb.Rect = [x0, top - 9, 11, 11]; cb.appearanceState = "Off"; doc.addField(cb);
+        } else {
+          doc.setDrawColor(90, 90, 90); doc.setLineWidth(0.9); doc.rect(x0, top - 8.5, 10.5, 10.5);
+        }
         // obligation tag (right-aligned, first line)
         doc.setFont("helvetica", "bold"); doc.setFontSize(7);
         setText(r.ob === "M" ? [163, 45, 45] : [133, 79, 11]);
