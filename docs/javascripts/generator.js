@@ -396,6 +396,48 @@
     return lines.join("\n");
   }
 
+  // jsPDF standard fonts are WinAnsi — swap the few glyphs they don't carry.
+  function pdfSafe(s) {
+    return String(s).replace(/≥/g, ">=").replace(/×/g, "x").replace(/→/g, "->");
+  }
+
+  // Build the one-pager as a real PDF and download it directly (no print dialog).
+  function downloadPdf(cfg, rows) {
+    var J = window.jspdf && window.jspdf.jsPDF;
+    if (!J) { window.print(); return; }          // fallback if the lib didn't load
+    var doc = new J({ unit: "pt", format: "letter" });
+    var pw = doc.internal.pageSize.getWidth();
+    var ph = doc.internal.pageSize.getHeight();
+    var mx = 48, my = 54, x = mx, maxw = pw - mx * 2, y = my;
+    function room(h) { if (y + (h || 0) > ph - my) { doc.addPage(); y = my; } }
+    function para(text, size, style, rgb, indent, lh) {
+      doc.setFont("helvetica", style); doc.setFontSize(size);
+      doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+      doc.splitTextToSize(pdfSafe(text), maxw - (indent || 0)).forEach(function (ln) {
+        room(lh); doc.text(ln, x + (indent || 0), y); y += lh;
+      });
+    }
+    para("Remaining readiness items", 18, "bold", [0, 51, 102], 0, 22);
+    doc.setDrawColor(252, 186, 25); doc.setLineWidth(2); doc.line(x, y, x + maxw, y); y += 16;
+    para(cfg.app || "Application", 12, "bold", [26, 90, 150], 0, 15);
+    para(metaLine(cfg) + "  ·  " + rows.length + " items to action", 9, "normal", [110, 110, 110], 0, 11);
+    y += 10;
+    var by = group(rows);
+    SECTIONS.forEach(function (s) {
+      var items = by[s[0]];
+      if (!items || !items.length) return;
+      room(46);
+      para(s[1] + "  (Gate " + s[2] + ")", 12, "bold", [0, 51, 102], 0, 16);
+      items.forEach(function (r) {
+        para("[ ]  " + LABELS[r.ob].toUpperCase() + "  —  " + r.item.title, 10, "bold", [27, 39, 51], 0, 12);
+        para("Why: " + r.item.why, 9, "normal", [110, 110, 110], 14, 10);
+        y += 5;
+      });
+      y += 6;
+    });
+    doc.save(slug(cfg.app || "application") + "-readiness-one-pager.pdf");
+  }
+
   /* --- labels ------------------------------------------------------------ */
   function tierLabel(t) {
     return { "1": "Tier 1 — Mission-critical", "2": "Tier 2 — Business-important",
@@ -444,7 +486,7 @@
   function onePagerHtml(cfg, rows) {
     var by = group(rows);
     var h = '<div class="arr-op-actions">' +
-      '<button class="md-button md-button--primary arr-op-print">Print / save as PDF</button>' +
+      '<button class="md-button md-button--primary arr-op-pdf">Download PDF</button>' +
       '<button class="md-button arr-op-copy">Copy as text</button>' +
       '<span class="arr-op-note">Add these to ServiceNow, JIRA, or your tool of choice.</span></div>' +
       '<div class="arr-op-sheet"><div class="arr-op-title"><h2>Remaining readiness items</h2>' +
@@ -549,7 +591,7 @@
       var panel = out.querySelector(".arr-onepager");
       panel.innerHTML = onePagerHtml(cfg, rows);
       panel.hidden = false;
-      panel.querySelector(".arr-op-print").addEventListener("click", function () { window.print(); });
+      panel.querySelector(".arr-op-pdf").addEventListener("click", function () { downloadPdf(cfg, rows); });
       var cp = panel.querySelector(".arr-op-copy");
       if (cp) cp.addEventListener("click", function () { copyText(cp, toPlainText(cfg, rows)); });
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
