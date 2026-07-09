@@ -346,12 +346,17 @@
       (cfg.build === "existing" ? " · retrofit" : "");
   }
 
-  // Flat CSV — imports into ServiceNow, JIRA, or a spreadsheet. Tool-agnostic.
+  // ServiceNow-friendly CSV: the column names match standard task fields, so a
+  // ServiceNow Import Set auto-maps them. Opens fine in Excel for any other tool too.
   function toCsv(cfg, rows) {
-    var out = [["Section", "Gate", "Priority", "Item", "Why", "Evidence"]];
+    var app = cfg.app || "Application";
+    var out = [["short_description", "description", "priority", "section", "gate"]];
     rows.forEach(function (r) {
       var m = sectionMeta(r.item.section);
-      out.push([m[1], m[2], LABELS[r.ob], r.item.title, r.item.why, r.item.evidence]);
+      var prio = r.ob === "M" ? "2" : "3";   // ServiceNow priority: 2 = High (Must), 3 = Moderate (Should)
+      var desc = "Why: " + r.item.why + "  Evidence: " + r.item.evidence +
+                 "  [" + LABELS[r.ob] + " | " + m[1] + " | Gate " + m[2] + "]";
+      out.push(["[" + app + "] " + r.item.title, desc, prio, m[1], m[2]]);
     });
     return out.map(function (row) { return row.map(csvField).join(","); }).join("\r\n");
   }
@@ -488,7 +493,7 @@
       '<button class="md-button md-button--primary arr-op-btn">Create one-pager of remaining items</button>' +
       '<button class="md-button arr-copy-btn">Copy remaining as text</button>' +
       '<button class="md-button arr-dl" data-fmt="md">Download list (.md)</button>' +
-      '<button class="md-button arr-dl" data-fmt="csv">Download for import (.csv)</button>' +
+      '<button class="md-button arr-dl" data-fmt="csv">Download for ServiceNow (.csv)</button>' +
       '</div>';
 
     html += '<div class="arr-onepager" hidden></div>';
@@ -557,7 +562,7 @@
       btn.addEventListener("click", function () {
         var base = slug(cfg.app || "application") + "-readiness";
         var fmt = btn.getAttribute("data-fmt"), rows = remainingRows();
-        if (fmt === "csv") download(base + ".csv", "text/csv", toCsv(cfg, rows));
+        if (fmt === "csv") download(base + "-servicenow.csv", "text/csv", toCsv(cfg, rows));
         else download(base + ".md", "text/markdown", toMarkdownList(cfg, rows));
       });
     });

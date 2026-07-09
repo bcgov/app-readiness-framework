@@ -88,6 +88,17 @@ You don't need to read the whole site — you leave here with a task list. The f
 
 </div>
 
+??? note "How to load the list into ServiceNow"
+    **Simplest — any user, no special rights.** Download **Download for ServiceNow (.csv)**
+    (or *Copy remaining as text*), then on the application's **Readiness record** either
+    attach the file, paste the list into the work notes, or create one task per remaining
+    item.
+
+    **If you have import rights.** *System Import Sets → Load Data* → upload the CSV →
+    map the columns → run the transform. The CSV's headers already match ServiceNow task
+    fields (`short_description`, `description`, `priority`), so it maps with little fiddling.
+    Priority is pre-set: **2 (High)** for *Must* items, **3 (Moderate)** for *Should*.
+
 !!! note "Coming soon — automatic verification"
     Today you self-report what's done. The [compliance scan](../reference/compliance-enforcement.md)
     will auto-verify the build & pipeline items (tests, scans, SBOM, signing) and feed the
