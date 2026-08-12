@@ -1,16 +1,19 @@
 # Build your checklist
 
 Answer six questions and get a **right-sized checklist** for *your* application — only the
-items that apply to your tier, platform, and delivery model. **Tick off what's already
-done**, then generate a **one-pager of what's left** to paste into ServiceNow, JIRA, or
-whatever tool your team uses. No reading the whole site; you leave with a task list, not a
-reading assignment.
+items that apply to your tier, platform, and delivery model. For each item, **paste an
+evidence link and tick it done** (evidence is required to mark an item complete). Then
+export a **one-pager of what's left** or a **verification report of what's done**. No
+reading the whole site; you leave with a task list, not a reading assignment.
 
-!!! tip "How it works — two parts"
-    **1. The checklist** — key questions and things to do before handover, each linking to
-    the detailed [best-practice guidance](../principles/criticality-tiers.md). **2. The
-    one-pager** — the remaining (unchecked) items, ready to turn into tasks. Not sure of
-    your tier? Classify **up** when in doubt and confirm with Architecture.
+!!! tip "How it works"
+    **1. Work the checklist** — for each item, add an evidence link (repo / PR / doc) and
+    tick it. Each item links to the detailed
+    [best-practice guidance](../principles/criticality-tiers.md) (opens in a new tab).
+    **2. Your progress auto-saves** in this browser; use **Save / Load progress** to move
+    it between machines. **3. Export** — a *one-pager* of remaining items to create tasks
+    from, or a *verification report* of completed items (with evidence) for sign-off. Not
+    sure of your tier? Classify **up** when in doubt and confirm with Architecture.
 
 <div id="arr-gen" markdown="0">
   <div class="arr-gen-form">
@@ -80,10 +83,10 @@ You don't need to read the whole site — you leave here with a task list. The f
 
 <div class="arr-flow" markdown>
 
-1. **Generate & review** — answer the questions, then go down the checklist and **tick what's already done**. Click **`details ↗`** on anything unclear to read the guidance.
-2. **Create the one-pager** — hit *Create one-pager of remaining items* to get a clean sheet of only what's left.
-3. **Take it to your tool** — *Export as PDF*, *Copy as text*, or the *ServiceNow .csv*, then add those items as tasks in **ServiceNow** (or whatever your team uses).
-4. **Do the work** — each item's **Evidence** line tells you what proves it's done.
+1. **Generate & review** — answer the questions, then go down the checklist. Click **`details ↗`** on anything unclear (opens in a new tab, so you don't lose your place).
+2. **Add evidence & tick** — for each item, paste an **evidence link** (repo / PR / doc) and tick it done. Evidence is **required** to mark an item complete. Progress **auto-saves in this browser**; use *Save / Load progress* to move it between machines.
+3. **Export what's left** — *Create one-pager of remaining items*, then add them as tasks in **ServiceNow** (via *Tasks for ServiceNow .csv*) or your tool of choice.
+4. **Report what's done** — *Verification report (.md)* lists completed items with their evidence — send it to the vendor / team for sign-off.
 5. **Prove it at handover** — the completed checklist *is* your [Production Readiness Review](../readiness/production-readiness-review.md); sign-off is recorded in the [ServiceNow readiness record](../reference/servicenow-process.md) and linked to the CMDB.
 
 </div>

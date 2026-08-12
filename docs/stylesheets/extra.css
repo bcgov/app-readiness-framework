@@ -394,6 +394,34 @@
 }
 .arr-gen-doc { font-size: .72rem; font-weight: 600; white-space: nowrap; margin-left: .4rem; }
 
+/* per-item evidence field + gating */
+.arr-gen-eviform { display: flex; align-items: center; gap: .6rem; margin-top: .45rem; }
+.arr-item-evidence {
+  flex: 1 1 auto; min-width: 0; max-width: 34rem;
+  font-size: .8rem; padding: .35rem .55rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 7px; background: var(--md-default-bg-color); color: var(--md-default-fg-color);
+  font-family: inherit;
+}
+.arr-item-evidence:focus { outline: 2px solid var(--arr-blue-300); outline-offset: 1px; }
+.arr-evi-hint { font-size: .7rem; color: var(--md-default-fg-color--light); white-space: nowrap; }
+.arr-gen-list li.has-evidence .arr-evi-hint { display: none; }
+.arr-gen-list li.has-evidence .arr-item-evidence { border-color: #1d9e75; }
+.arr-gen-list li.needs-evidence .arr-item-evidence {
+  border-color: var(--md-typeset-a-color); border-color: #a32d2d;
+}
+.arr-gen-list li.needs-evidence .arr-evi-hint { color: #a32d2d; font-weight: 700; display: inline; }
+[data-md-color-scheme="slate"] .arr-gen-list li.has-evidence .arr-item-evidence { border-color: #5dcaa5; }
+
+/* save / load progress row */
+.arr-gen-progressbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .6rem;
+  margin: 0 0 1.2rem;
+}
+.arr-gen-progressbar .md-button { margin: 0; cursor: pointer; }
+.arr-load-lbl { display: inline-flex; align-items: center; }
+.arr-autosave { font-size: .74rem; color: var(--md-default-fg-color--light); }
+
 /* one-pager */
 .arr-onepager { margin: 1.4rem 0; }
 .arr-op-actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: .8rem; }

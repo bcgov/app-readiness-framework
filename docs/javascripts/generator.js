@@ -616,6 +616,89 @@
     return h;
   }
 
+  /* --- per-item state, persistence, reports ----------------------------- */
+  function itemRows(out) {
+    var flat = out._flat || [];
+    var arr = [];
+    out.querySelectorAll(".arr-gen-list li").forEach(function (li) {
+      var r = flat[+li.getAttribute("data-idx")];
+      if (!r) return;
+      var cb = li.querySelector(".arr-item-done"), ev = li.querySelector(".arr-item-evidence");
+      arr.push({ item: r.item, ob: r.ob, key: li.getAttribute("data-key"),
+        done: cb ? cb.checked : false, evidence: ev ? ev.value.trim() : "" });
+    });
+    return arr;
+  }
+  function remainingRows(out) {
+    return itemRows(out).filter(function (r) { return !r.done; })
+      .map(function (r) { return { item: r.item, ob: r.ob }; });
+  }
+  function updateProgress(out) {
+    var rows = itemRows(out), total = rows.length;
+    var done = rows.filter(function (r) { return r.done; }).length;
+    var d = out.querySelector(".arr-done-n"), rem = out.querySelector(".arr-remaining-n");
+    if (d) d.textContent = done;
+    if (rem) rem.textContent = total - done;
+  }
+  function stateKey(cfg) { return "arr-state:" + slug(cfg.app || "application"); }
+  function collectState(cfg, out) {
+    var items = {};
+    itemRows(out).forEach(function (r) {
+      if (r.done || r.evidence) items[r.key] = { done: r.done, evidence: r.evidence };
+    });
+    return { version: 1, savedAt: todayStr(), cfg: cfg, items: items };
+  }
+  function saveLocal(cfg, out) {
+    try { localStorage.setItem(stateKey(cfg), JSON.stringify(collectState(cfg, out))); } catch (e) {}
+  }
+  function loadLocal(cfg) {
+    try { var s = localStorage.getItem(stateKey(cfg)); return s ? JSON.parse(s) : null; } catch (e) { return null; }
+  }
+  function applyItemStates(out, items) {
+    if (!items) return;
+    out.querySelectorAll(".arr-gen-list li").forEach(function (li) {
+      var st = items[li.getAttribute("data-key")];
+      if (!st) return;
+      var ev = li.querySelector(".arr-item-evidence");
+      if (ev) ev.value = st.evidence || "";
+      var has = !!(st.evidence || "").trim();
+      li.classList.toggle("has-evidence", has);
+      var cb = li.querySelector(".arr-item-done");
+      if (cb) { cb.checked = !!st.done && has; li.classList.toggle("done", cb.checked); }
+    });
+    updateProgress(out);
+  }
+
+  // Verification report: what's done (with evidence) and what's outstanding.
+  function toVerificationReport(cfg, out) {
+    var states = itemRows(out);
+    var done = states.filter(function (r) { return r.done; });
+    var pend = states.filter(function (r) { return !r.done; });
+    var h = "# Readiness verification report — " + (cfg.app || "Application") + "\n\n> " +
+      metaLine(cfg) + "\n>\n> " + done.length + " of " + states.length +
+      " items complete · generated " + todayStr() + "\n";
+    h += "\n## Completed (with evidence)\n";
+    if (!done.length) h += "\n_None yet._\n";
+    SECTIONS.forEach(function (s) {
+      var items = done.filter(function (r) { return r.item.section === s[0]; });
+      if (!items.length) return;
+      h += "\n### " + s[1] + "\n";
+      items.forEach(function (r) {
+        h += "- [x] **" + LABELS[r.ob] + "** — " + r.item.title + "\n" +
+             "  - Evidence: " + (r.evidence || "_(none provided)_") + "\n";
+      });
+    });
+    h += "\n## Outstanding\n";
+    if (!pend.length) h += "\n_None — all applicable items complete._\n";
+    SECTIONS.forEach(function (s) {
+      var items = pend.filter(function (r) { return r.item.section === s[0]; });
+      if (!items.length) return;
+      h += "\n### " + s[1] + "\n";
+      items.forEach(function (r) { h += "- [ ] **" + LABELS[r.ob] + "** — " + r.item.title + "\n"; });
+    });
+    return h;
+  }
+
   function renderResults(root, cfg, selected) {
     var by = group(selected);
     var flat = [];
@@ -632,15 +715,23 @@
         '<span class="arr-remaining-n">' + selected.length + '</span> of ' + selected.length + ' remaining</div>' +
       '</div>';
 
-    html += '<div class="arr-gen-howto"><strong>How to use this:</strong> tick the items already done, ' +
-      'then <em>Create one-pager of remaining items</em> for a clean list of what\'s left — paste it into ' +
-      'ServiceNow (or your tool of choice) to create tasks. Each item links to the detailed guidance.</div>';
+    html += '<div class="arr-gen-howto"><strong>How to use this:</strong> for each item, ' +
+      'paste an <strong>evidence link</strong> (repo / PR / doc) and tick it done — evidence is required to ' +
+      'mark an item complete. Your progress <strong>auto-saves in this browser</strong>; use ' +
+      '<em>Save / Load progress</em> to move it between machines. Then export a ' +
+      '<em>one-pager</em> of what\'s left, or a <em>verification report</em> of what\'s done.</div>';
 
     html += '<div class="arr-gen-actions">' +
       '<button class="md-button md-button--primary arr-op-btn">Create one-pager of remaining items</button>' +
-      '<button class="md-button arr-copy-btn">Copy remaining as text</button>' +
-      '<button class="md-button arr-dl" data-fmt="md">Download list (.md)</button>' +
-      '<button class="md-button arr-dl" data-fmt="csv">Download for ServiceNow (.csv)</button>' +
+      '<button class="md-button arr-report-btn">Verification report (.md)</button>' +
+      '<button class="md-button arr-dl" data-fmt="csv">Tasks for ServiceNow (.csv)</button>' +
+      '</div>';
+
+    html += '<div class="arr-gen-progressbar">' +
+      '<button class="md-button arr-save-btn">Save progress</button>' +
+      '<label class="md-button arr-load-lbl">Load progress' +
+        '<input type="file" class="arr-load-input" accept=".json,application/json" hidden></label>' +
+      '<span class="arr-autosave">Progress auto-saves in this browser as you go.</span>' +
       '</div>';
 
     html += '<div class="arr-onepager" hidden></div>';
@@ -649,19 +740,24 @@
       var key = s[0], label = s[1], gate = s[2];
       var items = by[key];
       if (!items || !items.length) return;
-      var doc = SECTION_DOC[key];
+      var docUrl = SECTION_DOC[key];
       html += '<div class="arr-gen-section"><h3>' + esc(label) +
               ' <span class="arr-gate">Gate ' + gate + '</span></h3><ul class="arr-gen-list">';
       items.forEach(function (r) {
         var idx = flat.length; flat.push(r);
-        html += '<li data-idx="' + idx + '">' +
-          '<label class="arr-check" title="Mark done"><input type="checkbox" class="arr-item-done"></label>' +
+        var dkey = r.item.section + "::" + slug(r.item.title);
+        html += '<li data-idx="' + idx + '" data-key="' + dkey + '">' +
+          '<label class="arr-check" title="Add evidence, then tick"><input type="checkbox" class="arr-item-done"></label>' +
           pill(r.ob) +
           '<div class="arr-gen-item">' +
             '<div class="arr-gen-title">' + esc(r.item.title) +
-              (doc ? ' <a class="arr-gen-doc" href="' + doc + '">details ↗</a>' : '') + '</div>' +
+              (docUrl ? ' <a class="arr-gen-doc" href="' + docUrl + '" target="_blank" rel="noopener">details ↗</a>' : '') + '</div>' +
             '<div class="arr-gen-why"><span>Why</span> ' + esc(r.item.why) + '</div>' +
-            '<div class="arr-gen-ev"><span>Evidence</span> ' + esc(r.item.evidence) + '</div>' +
+            '<div class="arr-gen-ev"><span>Evidence expected</span> ' + esc(r.item.evidence) + '</div>' +
+            '<div class="arr-gen-eviform">' +
+              '<input type="text" class="arr-item-evidence" placeholder="Paste your evidence link (repo / PR / doc) — required to mark done">' +
+              '<span class="arr-evi-hint">Add evidence to mark this done</span>' +
+            '</div>' +
           '</div></li>';
       });
       html += '</ul></div>';
@@ -670,29 +766,37 @@
     var out = root.querySelector(".arr-gen-out");
     out.innerHTML = html;
     out.hidden = false;
+    out._flat = flat;
 
-    var doneN = out.querySelector(".arr-done-n"), remN = out.querySelector(".arr-remaining-n");
-    function remainingRows() {
-      var rows = [];
-      out.querySelectorAll(".arr-gen-list li").forEach(function (li) {
-        var cb = li.querySelector(".arr-item-done");
-        if (cb && !cb.checked) rows.push(flat[+li.getAttribute("data-idx")]);
-      });
-      return rows;
-    }
-    function updateProgress() {
-      var total = flat.length, remaining = remainingRows().length;
-      doneN.textContent = total - remaining; remN.textContent = remaining;
-    }
+    // tick requires evidence; clearing evidence unticks
     out.addEventListener("change", function (e) {
-      if (e.target && e.target.classList.contains("arr-item-done")) {
-        var li = e.target.closest("li"); if (li) li.classList.toggle("done", e.target.checked);
-        updateProgress();
+      var t = e.target;
+      if (t && t.classList.contains("arr-item-done")) {
+        var li = t.closest("li"), ev = li.querySelector(".arr-item-evidence");
+        if (t.checked && !(ev && ev.value.trim())) {
+          t.checked = false;
+          li.classList.add("needs-evidence");
+          if (ev) ev.focus();
+          setTimeout(function () { li.classList.remove("needs-evidence"); }, 2500);
+          return;
+        }
+        li.classList.toggle("done", t.checked);
+        updateProgress(out); saveLocal(cfg, out);
+      }
+    });
+    out.addEventListener("input", function (e) {
+      var t = e.target;
+      if (t && t.classList.contains("arr-item-evidence")) {
+        var li = t.closest("li"), has = !!t.value.trim();
+        li.classList.toggle("has-evidence", has);
+        li.classList.remove("needs-evidence");
+        if (!has) { var cb = li.querySelector(".arr-item-done"); if (cb && cb.checked) { cb.checked = false; li.classList.remove("done"); updateProgress(out); } }
+        saveLocal(cfg, out);
       }
     });
 
     out.querySelector(".arr-op-btn").addEventListener("click", function () {
-      var rows = remainingRows();
+      var rows = remainingRows(out);
       var panel = out.querySelector(".arr-onepager");
       panel.innerHTML = onePagerHtml(cfg, rows);
       panel.hidden = false;
@@ -702,19 +806,36 @@
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    var copyBtn = out.querySelector(".arr-copy-btn");
-    copyBtn.addEventListener("click", function () { copyText(copyBtn, toPlainText(cfg, remainingRows())); });
+    out.querySelector(".arr-report-btn").addEventListener("click", function () {
+      download(slug(cfg.app || "application") + "-verification-report.md", "text/markdown", toVerificationReport(cfg, out));
+    });
 
     out.querySelectorAll(".arr-dl").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var base = slug(cfg.app || "application") + "-readiness";
-        var fmt = btn.getAttribute("data-fmt"), rows = remainingRows();
-        if (fmt === "csv") download(base + "-servicenow.csv", "text/csv", toCsv(cfg, rows));
-        else download(base + ".md", "text/markdown", toMarkdownList(cfg, rows));
+        download(slug(cfg.app || "application") + "-readiness-servicenow.csv", "text/csv", toCsv(cfg, remainingRows(out)));
       });
     });
 
-    updateProgress();
+    out.querySelector(".arr-save-btn").addEventListener("click", function () {
+      download(slug(cfg.app || "application") + "-progress.json", "application/json",
+        JSON.stringify(collectState(cfg, out), null, 1));
+    });
+    var loadInput = out.querySelector(".arr-load-input");
+    loadInput.addEventListener("change", function () {
+      var f = loadInput.files && loadInput.files[0];
+      if (!f) return;
+      var fr = new FileReader();
+      fr.onload = function () {
+        try {
+          var st = JSON.parse(fr.result);
+          setFormConfig(root, st.cfg);
+          runGenerate(root, st);
+        } catch (e) { alert("Sorry — that doesn't look like a saved progress file."); }
+      };
+      fr.readAsText(f);
+    });
+
+    updateProgress(out);
     out.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -734,16 +855,31 @@
     };
   }
 
+  function setFormConfig(root, cfg) {
+    if (!cfg) return;
+    if (cfg.app != null) root.querySelector('[name="app"]').value = cfg.app;
+    ["build", "tier", "facing", "delivery"].forEach(function (n) {
+      var el = root.querySelector('[name="' + n + '"][value="' + cfg[n] + '"]');
+      if (el) el.checked = true;
+    });
+    if (cfg.platform) { var p = root.querySelector('[name="platform"]'); if (p) p.value = cfg.platform; }
+    var o = root.querySelector('[name="optional"]'); if (o) o.checked = !!cfg.includeOptional;
+  }
+
+  function runGenerate(root, stateObj) {
+    var cfg = readConfig(root);
+    if (!cfg.tier) return;
+    renderResults(root, cfg, selectItems(cfg));
+    var out = root.querySelector(".arr-gen-out");
+    var st = stateObj || loadLocal(cfg);
+    if (st && st.items) applyItemStates(out, st.items);
+  }
+
   function init() {
     var root = document.getElementById("arr-gen");
     if (!root || root.dataset.wired) return;
     root.dataset.wired = "1";
-
-    root.querySelector(".arr-gen-run").addEventListener("click", function () {
-      var cfg = readConfig(root);
-      if (!cfg.tier) { return; }
-      renderResults(root, cfg, selectItems(cfg));
-    });
+    root.querySelector(".arr-gen-run").addEventListener("click", function () { runGenerate(root); });
   }
 
   if (window.document$ && typeof window.document$.subscribe === "function") {
