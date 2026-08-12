@@ -432,6 +432,71 @@
     return lines.join("\n");
   }
 
+  // Progress as an Excel-friendly CSV that round-trips (config header + item table).
+  function toProgressCsv(cfg, out) {
+    function q(s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; }
+    var lines = ["Application readiness — saved progress",
+      "Application," + q(cfg.app || ""),
+      "Tier," + q(cfg.tier),
+      "Audience," + q(cfg.facing),
+      "Platform," + q(cfg.platform),
+      "Delivery," + q(cfg.delivery),
+      "Build," + q(cfg.build),
+      "IncludeOptional," + q(cfg.includeOptional ? "yes" : "no"),
+      "",
+      ["Section", "Gate", "Obligation", "Item", "Done", "Evidence", "Why", "Key"].join(",")];
+    itemRows(out).forEach(function (r) {
+      var m = sectionMeta(r.item.section);
+      lines.push([q(m[1]), q(m[2]), q(LABELS[r.ob]), q(r.item.title),
+        q(r.done ? "Yes" : "No"), q(r.evidence), q(r.item.why), q(r.key)].join(","));
+    });
+    return lines.join("\r\n");
+  }
+  function parseCsv(text) {
+    var rows = [], row = [], field = "", i = 0, inQ = false, c;
+    text = String(text).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    while (i < text.length) {
+      c = text[i];
+      if (inQ) {
+        if (c === '"') { if (text[i + 1] === '"') { field += '"'; i += 2; continue; } inQ = false; i++; continue; }
+        field += c; i++; continue;
+      }
+      if (c === '"') { inQ = true; i++; continue; }
+      if (c === ",") { row.push(field); field = ""; i++; continue; }
+      if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
+      field += c; i++;
+    }
+    row.push(field); rows.push(row);
+    return rows;
+  }
+  function fromProgressCsv(text) {
+    var rows = parseCsv(text), cfg = {}, headerIdx = -1;
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (r[0] === "Section" && r[1] === "Gate") { headerIdx = i; break; }
+      if (r.length >= 2) {
+        var k = r[0], v = r[1];
+        if (k === "Application") cfg.app = v;
+        else if (k === "Tier") cfg.tier = v;
+        else if (k === "Audience") cfg.facing = v;
+        else if (k === "Platform") cfg.platform = v;
+        else if (k === "Delivery") cfg.delivery = v;
+        else if (k === "Build") cfg.build = v;
+        else if (k === "IncludeOptional") cfg.includeOptional = (v || "").toLowerCase() === "yes";
+      }
+    }
+    var items = {};
+    if (headerIdx >= 0) {
+      var hdr = rows[headerIdx], ki = hdr.indexOf("Key"), di = hdr.indexOf("Done"), ei = hdr.indexOf("Evidence");
+      for (var j = headerIdx + 1; j < rows.length; j++) {
+        var rr = rows[j];
+        if (!rr || !rr[ki]) continue;
+        items[rr[ki]] = { done: (rr[di] || "").toLowerCase() === "yes", evidence: rr[ei] || "" };
+      }
+    }
+    return { cfg: cfg, items: items };
+  }
+
   // jsPDF standard fonts are WinAnsi — swap the few glyphs they don't carry.
   function pdfSafe(s) {
     return String(s).replace(/≥/g, ">=").replace(/×/g, "x").replace(/→/g, "->");
@@ -585,7 +650,7 @@
              "3": "Tier 3 — Supporting" }[t]; }
   function platformLabel(p) {
     return { openshift: "OpenShift", salesforce: "Salesforce", cloud: "Public cloud (Azure/AWS)",
-             datacenter: "Private data centre", desktop: "Desktop client", other: "Other platform" }[p] || p; }
+             datacenter: "BC Gov Data Centre", desktop: "Desktop client", other: "Other platform" }[p] || p; }
 
   /* --- render ------------------------------------------------------------ */
   function pill(ob) {
@@ -764,10 +829,10 @@
       '</div>';
 
     html += '<div class="arr-gen-progressbar">' +
-      '<button class="md-button arr-save-btn">Save progress</button>' +
-      '<label class="md-button arr-load-lbl">Load progress' +
-        '<input type="file" class="arr-load-input" accept=".json,application/json" hidden></label>' +
-      '<span class="arr-autosave">Progress auto-saves in this browser as you go.</span>' +
+      '<button class="md-button arr-save-btn">Save progress (.csv)</button>' +
+      '<label class="md-button arr-load-lbl">Load progress (.csv)' +
+        '<input type="file" class="arr-load-input" accept=".csv,text/csv" hidden></label>' +
+      '<span class="arr-autosave">Progress auto-saves in this browser; the CSV opens in Excel and re-imports here.</span>' +
       '</div>';
 
     html += '<div class="arr-onepager" hidden></div>';
@@ -853,8 +918,7 @@
     });
 
     out.querySelector(".arr-save-btn").addEventListener("click", function () {
-      download(slug(cfg.app || "application") + "-progress.json", "application/json",
-        JSON.stringify(collectState(cfg, out), null, 1));
+      download(slug(cfg.app || "application") + "-progress.csv", "text/csv", toProgressCsv(cfg, out));
     });
     var loadInput = out.querySelector(".arr-load-input");
     loadInput.addEventListener("change", function () {
@@ -863,10 +927,10 @@
       var fr = new FileReader();
       fr.onload = function () {
         try {
-          var st = JSON.parse(fr.result);
+          var st = fromProgressCsv(fr.result);
           setFormConfig(root, st.cfg);
           runGenerate(root, st);
-        } catch (e) { alert("Sorry — that doesn't look like a saved progress file."); }
+        } catch (e) { alert("Sorry — that doesn't look like a saved progress CSV."); }
       };
       fr.readAsText(f);
     });
@@ -909,6 +973,27 @@
     var out = root.querySelector(".arr-gen-out");
     var st = stateObj || loadLocal(cfg);
     if (st && st.items) applyItemStates(out, st.items);
+    try { localStorage.setItem("arr-last", JSON.stringify({ cfg: cfg, at: todayStr() })); } catch (e) {}
+  }
+
+  // If they left progress last time, offer a one-click resume.
+  function showResume(root) {
+    try {
+      var last = JSON.parse(localStorage.getItem("arr-last") || "null");
+      if (!last || !last.cfg || !last.cfg.app) return;
+      var saved = loadLocal(last.cfg);
+      if (!saved || !saved.items || !Object.keys(saved.items).length) return;
+      var form = root.querySelector(".arr-gen-form");
+      var banner = document.createElement("div");
+      banner.className = "arr-resume";
+      banner.innerHTML = '<span>You have saved progress for <strong>' + esc(last.cfg.app) + '</strong>' +
+        (last.at ? ' (last saved ' + esc(last.at) + ')' : '') + '.</span>' +
+        '<button type="button" class="md-button md-button--primary arr-resume-btn">Resume where I left off</button>';
+      form.parentNode.insertBefore(banner, form);
+      banner.querySelector(".arr-resume-btn").addEventListener("click", function () {
+        setFormConfig(root, last.cfg); runGenerate(root); banner.remove();
+      });
+    } catch (e) {}
   }
 
   function init() {
@@ -916,6 +1001,7 @@
     if (!root || root.dataset.wired) return;
     root.dataset.wired = "1";
     root.querySelector(".arr-gen-run").addEventListener("click", function () { runGenerate(root); });
+    showResume(root);
   }
 
   if (window.document$ && typeof window.document$.subscribe === "function") {
