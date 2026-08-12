@@ -81,9 +81,9 @@
       "So we can verify what we deploy and respond to the next dependency-level incident.",
       "CycloneDX/SPDX SBOM + cosign signature + SLSA provenance.",
       ["M","M","S"]),
-    I("build", "Store all runtime secrets in a managed secrets store, never in source or env vars",
-      "K8s Secrets are base64, not encrypted at rest; secrets in code are a breach waiting to happen. On OpenShift the standard is HashiCorp Vault; elsewhere use an approved equivalent.",
-      "Vault (Agent Injector / CSI) or an equivalent managed store; secret-scan clean.",
+    I("build", "Store runtime secrets in {{SECRETS}}, never in source or env vars",
+      "Secrets in code or plain env vars are a breach waiting to happen. On this platform use {{SECRETS}}.",
+      "{{SECRETS}} configured; secret-scan clean.",
       ["M","M","M"]),
     I("build", "Require signed commits and protected main + CODEOWNERS review",
       "Auditable, reviewed change flow is the baseline for a supportable app.",
@@ -93,6 +93,14 @@
       "Catches running-app vulnerabilities that static analysis can't.",
       "OWASP ZAP stage in the pipeline.",
       ["M","S","Y"]),
+    I("build", "Design within Salesforce governor limits (bulkify DML/SOQL; no queries or DML in loops)",
+      "Salesforce enforces hard per-transaction limits; un-bulkified code passes in a sandbox and fails under real data volumes.",
+      "Bulkified triggers/classes; limit-aware test evidence.",
+      ["M","M","S"], { platform: ["salesforce"] }),
+    I("build", "Define the sandbox and deployment strategy (DevOps Center / change sets / metadata API)",
+      "Salesforce deploys metadata, not containers — the sandbox model and promotion path must be defined and repeatable.",
+      "Documented sandbox strategy + a repeatable deployment pipeline.",
+      ["M","M","S"], { platform: ["salesforce"] }),
 
     /* --- Resilience (G3) --- */
     I("resilience", "Make the app stateless / externalise session",
@@ -159,13 +167,13 @@
       ["S","S","Y"]),
 
     /* --- Observability (G3) --- */
-    I("observability", "Ship metrics with dashboards (Sysdig on OpenShift, or an approved equivalent)",
-      "You can't operate what you can't see. On OpenShift the platform standard is Sysdig; elsewhere use an equivalent and justify it.",
-      "Monitoring dashboards for the app (Sysdig, or the platform's tool).",
+    I("observability", "Ship metrics with dashboards to {{MONITOR}}",
+      "You can't operate what you can't see. On this platform the monitoring standard is {{MONITOR}}.",
+      "{{MONITOR}} dashboards for the app.",
       ["M","M","S"]),
-    I("observability", "Ship structured logs with correlation / trace IDs (the Hive on OpenShift, or an approved equivalent)",
-      "Central, correlated logs are what make incident triage possible. On OpenShift the platform standard is the Hive; elsewhere use an equivalent and justify it.",
-      "Structured logs reaching the central platform with trace IDs.",
+    I("observability", "Ship structured logs with correlation / trace IDs to {{LOGS}}",
+      "Central, correlated logs are what make incident triage possible. On this platform use {{LOGS}}.",
+      "Structured logs reaching {{LOGS}} with trace IDs.",
       ["M","M","S"]),
     I("observability", "Add distributed tracing",
       "Traces are how you find the slow hop across a chain of services.",
@@ -293,15 +301,43 @@
     return true;
   }
 
+  // Platform decides the implementation of a capability. {{MONITOR}}/{{LOGS}}/{{SECRETS}}
+  // tokens in item text are resolved to the selected platform's actual tooling.
+  var PLATFORM_TOOLS = {
+    openshift:  { monitor: "Sysdig", logs: "the Hive", secrets: "HashiCorp Vault (Agent Injector / CSI)" },
+    salesforce: { monitor: "Salesforce Event Monitoring", logs: "Salesforce native logging / Event Monitoring", secrets: "Named Credentials & protected settings" },
+    cloud:      { monitor: "the cloud provider's monitoring (Azure Monitor / CloudWatch)", logs: "the cloud provider's logging (App Insights / CloudWatch Logs)", secrets: "the cloud secrets manager (Key Vault / Secrets Manager)" },
+    datacenter: { monitor: "the data-centre monitoring stack", logs: "central logging", secrets: "an approved managed secrets store" },
+    desktop:    { monitor: "endpoint / application monitoring", logs: "central logging", secrets: "an approved managed secrets store" },
+    other:      { monitor: "your monitoring platform", logs: "central logging", secrets: "a managed secrets store" }
+  };
+  function platformTool(platform, key) {
+    return (PLATFORM_TOOLS[platform] || PLATFORM_TOOLS.other)[key] || PLATFORM_TOOLS.other[key];
+  }
+  function resolveTokens(text, platform) {
+    return String(text)
+      .replace(/\{\{MONITOR\}\}/g, platformTool(platform, "monitor"))
+      .replace(/\{\{LOGS\}\}/g, platformTool(platform, "logs"))
+      .replace(/\{\{SECRETS\}\}/g, platformTool(platform, "secrets"));
+  }
+
   function selectItems(cfg) {
     var idx = tierIndex(cfg.tier);
     var out = [];
     CATALOG.forEach(function (item) {
       if (!applies(item, cfg)) return;
       var ob = item.t[idx];
-      if (ob === "-" ) return;
+      if (ob === "-") return;
       if (ob === "Y" && !cfg.includeOptional) return;
-      out.push({ item: item, ob: ob });
+      // resolve platform tooling; keep a platform-stable key off the raw title
+      var resolved = {
+        section: item.section,
+        title: resolveTokens(item.title, cfg.platform),
+        why: resolveTokens(item.why, cfg.platform),
+        evidence: resolveTokens(item.evidence, cfg.platform),
+        key: item.section + "::" + slug(item.title)
+      };
+      out.push({ item: resolved, ob: ob });
     });
     return out;
   }
@@ -549,7 +585,7 @@
              "3": "Tier 3 — Supporting" }[t]; }
   function platformLabel(p) {
     return { openshift: "OpenShift", salesforce: "Salesforce", cloud: "Public cloud (Azure/AWS)",
-             desktop: "Desktop client", other: "Other platform" }[p] || p; }
+             datacenter: "Private data centre", desktop: "Desktop client", other: "Other platform" }[p] || p; }
 
   /* --- render ------------------------------------------------------------ */
   function pill(ob) {
@@ -745,7 +781,7 @@
               ' <span class="arr-gate">Gate ' + gate + '</span></h3><ul class="arr-gen-list">';
       items.forEach(function (r) {
         var idx = flat.length; flat.push(r);
-        var dkey = r.item.section + "::" + slug(r.item.title);
+        var dkey = r.item.key || (r.item.section + "::" + slug(r.item.title));
         html += '<li data-idx="' + idx + '" data-key="' + dkey + '">' +
           '<label class="arr-check" title="Add evidence, then tick"><input type="checkbox" class="arr-item-done"></label>' +
           pill(r.ob) +

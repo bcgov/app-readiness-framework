@@ -60,6 +60,7 @@ reading the whole site; you leave with a task list, not a reading assignment.
           <option value="openshift" selected>OpenShift (containers)</option>
           <option value="salesforce">Salesforce</option>
           <option value="cloud">Public cloud (Azure / AWS)</option>
+          <option value="datacenter">Private data centre</option>
           <option value="desktop">Desktop client</option>
           <option value="other">Other</option>
         </select>
