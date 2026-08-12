@@ -320,6 +320,16 @@
       .replace(/\{\{LOGS\}\}/g, platformTool(platform, "logs"))
       .replace(/\{\{SECRETS\}\}/g, platformTool(platform, "secrets"));
   }
+  // Where an item applies. "" = universal (all platforms/tiers); otherwise the
+  // platform / audience / delivery condition that scopes it.
+  function appliesTag(item) {
+    if (item.facing === "public") return "Public-facing";
+    if (item.vendor) return "Vendor deliverable";
+    if (item.platform && item.platform.length) {
+      return item.platform.map(function (p) { return platformLabel(p); }).join(" / ") + "-specific";
+    }
+    return "";
+  }
 
   function selectItems(cfg) {
     var idx = tierIndex(cfg.tier);
@@ -335,6 +345,7 @@
         title: resolveTokens(item.title, cfg.platform),
         why: resolveTokens(item.why, cfg.platform),
         evidence: resolveTokens(item.evidence, cfg.platform),
+        applies: appliesTag(item),
         key: item.section + "::" + slug(item.title)
       };
       out.push({ item: resolved, ob: ob });
@@ -589,10 +600,14 @@
         } else {
           doc.setDrawColor(90, 90, 90); doc.setLineWidth(0.9); doc.rect(x0, top - 8.5, 11, 11);
         }
-        // obligation tag (right-aligned, first line)
+        // obligation tag (right-aligned, first line) + applicability
         doc.setFont("helvetica", "bold"); doc.setFontSize(7);
         setText(r.ob === "M" ? [163, 45, 45] : [133, 79, 11]);
         doc.text(LABELS[r.ob].toUpperCase(), x0 + W, top, { align: "right" });
+        if (r.item.applies) {
+          doc.setFont("helvetica", "normal"); doc.setFontSize(6.5); setText([140, 140, 140]);
+          doc.text(r.item.applies, x0 + W, top + 9, { align: "right" });
+        }
         // title
         doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); setText(INK);
         tLines.forEach(function (ln, i) { doc.text(ln, x0 + 20, top + i * 12); });
@@ -824,6 +839,7 @@
 
     html += '<div class="arr-gen-actions">' +
       '<button class="md-button md-button--primary arr-op-btn">Create one-pager of remaining items</button>' +
+      '<button class="md-button arr-full-pdf">Full checklist (PDF)</button>' +
       '<button class="md-button arr-report-btn">Verification report (.md)</button>' +
       '<button class="md-button arr-dl" data-fmt="csv">Tasks for ServiceNow (.csv)</button>' +
       '</div>';
@@ -852,7 +868,8 @@
           pill(r.ob) +
           '<div class="arr-gen-item">' +
             '<div class="arr-gen-title">' + esc(r.item.title) +
-              (docUrl ? ' <a class="arr-gen-doc" href="' + docUrl + '" target="_blank" rel="noopener">details ↗</a>' : '') + '</div>' +
+              (docUrl ? ' <a class="arr-gen-doc" href="' + docUrl + '" target="_blank" rel="noopener">details ↗</a>' : '') +
+              (r.item.applies ? ' <span class="arr-applies">' + esc(r.item.applies) + '</span>' : '') + '</div>' +
             '<div class="arr-gen-why"><span>Why</span> ' + esc(r.item.why) + '</div>' +
             '<div class="arr-gen-ev"><span>Evidence expected</span> ' + esc(r.item.evidence) + '</div>' +
             '<div class="arr-gen-eviform">' +
@@ -906,6 +923,8 @@
       if (cp) cp.addEventListener("click", function () { copyText(cp, toPlainText(cfg, rows)); });
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+
+    out.querySelector(".arr-full-pdf").addEventListener("click", function () { openPdf(cfg, selected, true); });
 
     out.querySelector(".arr-report-btn").addEventListener("click", function () {
       download(slug(cfg.app || "application") + "-verification-report.md", "text/markdown", toVerificationReport(cfg, out));
