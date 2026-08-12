@@ -19,7 +19,6 @@ graph LR
     S2[<b>2 · Design</b><br/>NFRs · ADRs · resilience<br/>threat model] --> S3
     S3[<b>3 · Build</b><br/>standard pipeline<br/>tests · scans · SBOM] --> S4
     S4[<b>4 · Prove & hand over</b><br/>readiness review<br/>evidence + sign-off]
-    linkStyle default stroke:#1a5a96;
 ```
 
 ### Step 1 — Classify your application (Day 1)

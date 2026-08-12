@@ -105,7 +105,6 @@ graph LR
     TEST --> APPROVE{Approval}
     APPROVE --> PROD[Promote same artifact to prod]
     PROD -.automated rollback.-> SCAN
-    linkStyle default stroke:#1a5a96;
 ```
 
 ## Enforcement
