@@ -436,6 +436,43 @@
 }
 .arr-resume .md-button { margin: 0; white-space: nowrap; }
 
+/* =========================================================================
+   Contrast fixes — legible in BOTH light and dark mode
+   ========================================================================= */
+
+/* Mermaid: our navy-filled nodes (classDef g / s / gate) must have white
+   labels. The classDef colour wasn't winning, so text rendered dark-on-navy
+   in both modes. Force white on exactly those nodes. */
+.mermaid .node.g .nodeLabel,   .mermaid .node.g .nodeLabel *,   .mermaid .node.g foreignObject *, .mermaid .node.g text, .mermaid .node.g tspan,
+.mermaid .node.s .nodeLabel,   .mermaid .node.s .nodeLabel *,   .mermaid .node.s foreignObject *, .mermaid .node.s text, .mermaid .node.s tspan,
+.mermaid .node.gate .nodeLabel, .mermaid .node.gate .nodeLabel *, .mermaid .node.gate foreignObject *, .mermaid .node.gate text, .mermaid .node.gate tspan {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Dark mode: lift the accent blue so badges/links/labels don't vanish on the
+   dark background (one override cascades to everything that uses it). */
+[data-md-color-scheme="slate"] {
+  --arr-blue-500: #7fb3ea;
+}
+/* outline buttons: navy text is invisible on dark — use a light blue */
+[data-md-color-scheme="slate"] .md-typeset .md-button:not(.md-button--primary) {
+  color: #add0f5; border-color: #6f9fd0;
+}
+[data-md-color-scheme="slate"] .md-typeset .md-button:not(.md-button--primary):hover {
+  color: #0d1b2a; background-color: #add0f5; border-color: #add0f5;
+}
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary {
+  background-color: #1a5a96; border-color: #1a5a96; color: #ffffff;
+}
+[data-md-color-scheme="slate"] .arr-applies,
+[data-md-color-scheme="slate"] .arr-gate {
+  color: #cfe4fb; background: rgba(127, 179, 234, .16);
+}
+[data-md-color-scheme="slate"] .arr-gen-doc,
+[data-md-color-scheme="slate"] .arr-gen-why span,
+[data-md-color-scheme="slate"] .arr-gen-ev span { color: #add0f5; }
+
 /* one-pager */
 .arr-onepager { margin: 1.4rem 0; }
 .arr-op-actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: .8rem; }
