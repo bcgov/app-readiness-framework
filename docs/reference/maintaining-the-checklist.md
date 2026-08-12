@@ -60,8 +60,7 @@ graph LR
     B --> C["CODEOWNERS review<br/>+ build check"]
     C --> D["Merge to main"]
     D --> E["Site auto-builds<br/>& deploys (~1 min)"]
-    classDef g fill:#003366,stroke:#1a5a96,color:#fff;
-    class A,B,C,D,E g;
+    linkStyle default stroke:#1a5a96;
 ```
 
 1. Edit the file (in GitHub's web editor, or a branch locally).

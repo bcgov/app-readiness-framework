@@ -105,8 +105,7 @@ graph LR
     TEST --> APPROVE{Approval}
     APPROVE --> PROD[Promote same artifact to prod]
     PROD -.automated rollback.-> SCAN
-    classDef gate fill:#003366,stroke:#1a5a96,color:#fff;
-    class MERGE,APPROVE gate;
+    linkStyle default stroke:#1a5a96;
 ```
 
 ## Enforcement

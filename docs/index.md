@@ -154,8 +154,7 @@ graph LR
     G2[<b>G2 · Build</b><br/>tests · scans · SBOM<br/>signing — in CI] --> G3
     G3[<b>G3 · Readiness</b><br/>SLOs · runbook · DR<br/>observability · CMDB] --> G4
     G4[<b>G4 · Operate</b><br/>DORA · patch SLAs<br/>compliance · postmortems]
-    classDef g fill:#003366,stroke:#1a5a96,color:#fff;
-    class G1,G2,G3,G4 g;
+    linkStyle default stroke:#1a5a96;
 ```
 
 | Gate | When | Owner | What it checks |

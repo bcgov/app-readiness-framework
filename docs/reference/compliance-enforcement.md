@@ -72,8 +72,7 @@ graph LR
     RP --> N[Notify owners<br/>of gaps]
     RP --> SN[Update ServiceNow<br/>readiness record]
     SN --> D[Fleet dashboard]
-    classDef g fill:#003366,stroke:#1a5a96,color:#fff;
-    class R,S,RP,N,SN,D g;
+    linkStyle default stroke:#1a5a96;
 ```
 
 > The scan itself ships as a starter you can run — see
