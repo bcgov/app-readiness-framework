@@ -5,10 +5,18 @@
     **not a go-live add-on**; instrument from the first commit. **Metrics** tell you
     *something is wrong*, **logs** tell you *what happened*, **traces** tell you *where*.
 
-Monitoring and logging are **mandatory**, not optional. The standard tooling is
-**Sysdig** for metrics and dashboards and **the Hive** for centralised logs. You **MAY**
-use additional tooling, but the app **MUST** emit metrics and structured logs to these
-platforms. Depth scales by [criticality tier](../principles/criticality-tiers.md).
+Monitoring and logging are **mandatory**, not optional — but the **capability** is the
+requirement, not a specific product. On the **OpenShift platform** the standards are
+**Sysdig** (metrics/dashboards) and **the Hive** (centralised logs), and you should use
+them. On other platforms, use an **equivalent tool and justify the choice in an ADR**.
+Depth scales by [criticality tier](../principles/criticality-tiers.md).
+
+!!! tip "Recommended vs required"
+    Throughout this framework, a named tool (Sysdig, the Hive, SonarQube, Vault…) is the
+    **recommended default** — mandatory where the **platform** provides it, otherwise a
+    recommendation you **MAY** meet with an approved equivalent, with the alternative
+    **justified in an ADR**. What's non-negotiable is the *capability* (metrics, logs,
+    scanning, secret management), not the brand.
 
 ---
 
