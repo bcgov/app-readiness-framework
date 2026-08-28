@@ -572,3 +572,11 @@
   font-weight: 700; text-transform: uppercase; font-size: .64rem;
   letter-spacing: .04em; margin-right: .35rem; color: var(--arr-blue-500);
 }
+.arr-gen-covers {
+  font-size: .76rem; color: var(--md-default-fg-color--light); margin-top: .2rem; font-style: italic;
+}
+.arr-gen-covers span {
+  font-weight: 700; text-transform: uppercase; font-size: .62rem; letter-spacing: .04em;
+  margin-right: .35rem; color: var(--arr-blue-500); font-style: normal;
+}
+[data-md-color-scheme="slate"] .arr-gen-covers span { color: #add0f5; }
