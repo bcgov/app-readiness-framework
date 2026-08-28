@@ -56,6 +56,20 @@ Each **row** of `checklist-items.csv` is one checklist item. The columns are:
 To change the **guidance** behind an item, edit the relevant Markdown page under `docs/`
 (plain Markdown — headings, lists, tables, admonitions).
 
+## Refreshing the Excel copy
+
+The polished Excel workbook is **generated from the same CSV**, so it never drifts.
+After editing `checklist-items.csv`, regenerate it:
+
+```bash
+pip install openpyxl
+python scripts/build-checklist-xlsx.py
+```
+
+This reads the CSV, resolves the platform tokens and links, and writes
+`Application-Readiness-Checklist.xlsx`. The CSV is the master — don't hand-edit the
+`.xlsx`. See [`scripts/README.md`](https://github.com/bcgov/app-readiness-framework/blob/main/scripts/README.md).
+
 !!! info "Safety fallback (for developers)"
     `docs/javascripts/generator.js` still contains a copy of the catalogue as a hard-coded
     fallback, used only if the CSV can't be loaded. The **CSV is the source of truth**; the
