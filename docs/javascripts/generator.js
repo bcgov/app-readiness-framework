@@ -13,6 +13,10 @@
   var LABELS = { M: "Must", S: "Should", Y: "Optional", "-": "" };
   var PRIORITY = { M: "High", S: "Medium", Y: "Low" };
 
+  /* NOTE: the live checklist is maintained in docs/checklist/checklist-items.csv
+     (edit it in Excel — no code). The SECTIONS and CATALOG below are only a
+     FALLBACK used if that CSV can't be loaded; keep them in sync when you can,
+     but the CSV is the source of truth. See loadCatalog()/catalogFromCsv(). */
   var SECTIONS = [
     ["design",        "Design & decisions",        "G1"],
     ["build",         "Build & pipeline",          "G2"],
@@ -885,12 +889,78 @@
     } catch (e) {}
   }
 
+  /* --- editable source: build the catalog from checklist-items.csv -------- *
+   * The checklist is maintained in docs/checklist/checklist-items.csv, which
+   * anyone can open and edit in Excel (no code). The tool fetches it on load
+   * and builds the whole checklist from it. The CATALOG/SECTIONS defined at
+   * the top of this file are only a safety fallback if the CSV can't be read. */
+  function catalogFromCsv(text) {
+    var rows = parseCsv(text);
+    if (!rows || rows.length < 2) return null;
+    var hdr = rows[0].map(function (h) { return String(h || "").trim().toLowerCase(); });
+    function ix(n) { return hdr.indexOf(n); }
+    var iS = ix("section"), iG = ix("gate"), iItem = ix("item"), iWhy = ix("why"),
+        iEv = ix("evidence"), iCov = ix("covers"), iT1 = ix("tier 1"),
+        iT2 = ix("tier 2"), iT3 = ix("tier 3"), iAp = ix("applies to"),
+        iLink = ix("more info");
+    if (iS < 0 || iItem < 0 || iT1 < 0) return null;
+    var OB = { "must": "M", "should": "S", "optional": "Y", "n/a": "-", "na": "-", "-": "-", "": "-" };
+    function ob(v) { return OB[String(v || "").trim().toLowerCase()] || "-"; }
+    var PLAT = { "openshift": "openshift", "salesforce": "salesforce",
+      "public cloud": "cloud", "cloud": "cloud", "bc gov data centre": "datacenter",
+      "bc gov data center": "datacenter", "desktop": "desktop" };
+    var cat = [], secs = [], seen = {};
+    for (var r = 1; r < rows.length; r++) {
+      var row = rows[r];
+      if (!row) continue;
+      var title = String(row[iItem] || "").trim();
+      if (!title) continue;
+      var sec = String(row[iS] || "").trim();
+      var gate = iG >= 0 ? String(row[iG] || "").trim() : "";
+      if (sec && !seen[sec]) { seen[sec] = true; secs.push([sec, sec, gate]); }
+      var link = iLink >= 0 ? String(row[iLink] || "").trim() : "";
+      if (link && !/^(https?:|\.\.?\/|\/|#)/.test(link)) link = "";
+      var item = {
+        section: sec, title: title,
+        why: iWhy >= 0 ? String(row[iWhy] || "").trim() : "",
+        evidence: iEv >= 0 ? String(row[iEv] || "").trim() : "",
+        covers: iCov >= 0 ? String(row[iCov] || "").trim() : "",
+        link: link,
+        t: [ob(row[iT1]), ob(row[iT2]), ob(row[iT3])]
+      };
+      var ap = String((iAp >= 0 ? row[iAp] : "") || "").toLowerCase();
+      if (ap.indexOf("vendor") > -1) item.vendor = true;
+      if (ap.indexOf("public-facing") > -1 || ap.indexOf("public facing") > -1) item.facing = "public";
+      var plats = [];
+      for (var key in PLAT) { if (ap.indexOf(key) > -1 && plats.indexOf(PLAT[key]) < 0) plats.push(PLAT[key]); }
+      if (plats.length) item.platform = plats;
+      cat.push(item);
+    }
+    if (!cat.length) return null;
+    return { sections: secs, catalog: cat };
+  }
+
+  function loadCatalog(done) {
+    var finish = function () { try { done(); } catch (e) {} };
+    if (typeof fetch !== "function") { finish(); return; }
+    fetch("../checklist-items.csv", { cache: "no-cache" }).then(function (resp) {
+      return resp && resp.ok ? resp.text() : null;
+    }).then(function (text) {
+      if (text) {
+        var res = catalogFromCsv(text);
+        if (res && res.catalog.length) { CATALOG = res.catalog; SECTIONS = res.sections; }
+      }
+      finish();
+    }).catch(finish);
+  }
+
   function init() {
     var root = document.getElementById("arr-gen");
     if (!root || root.dataset.wired) return;
     root.dataset.wired = "1";
     root.querySelector(".arr-gen-run").addEventListener("click", function () { runGenerate(root); });
-    showResume(root);
+    // Load the editable CSV source; it overrides the built-in fallback catalog.
+    loadCatalog(function () { showResume(root); });
   }
 
   if (window.document$ && typeof window.document$.subscribe === "function") {
