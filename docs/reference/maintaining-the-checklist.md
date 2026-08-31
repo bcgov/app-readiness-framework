@@ -1,7 +1,13 @@
 # Maintaining the checklist
 
 The checklist is a **living document** — anyone on the team can update it, not just the
-person who built it. This page is how.
+person who built it. This page is the fuller reference (columns, tokens, regenerating
+the Excel).
+
+!!! tip "Not a developer?"
+    If you own *what* the checklist asks for (a PO, BA, or manager) and just want to
+    change an item, start with [**Change the checklist (no code)**](change-the-checklist.md) —
+    it's the plain-language version.
 
 !!! tip "The short version"
     The checklist items live in **one spreadsheet** — `docs/checklist/checklist-items.csv`
