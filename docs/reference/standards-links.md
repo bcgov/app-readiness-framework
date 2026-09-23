@@ -18,7 +18,7 @@ These starters ship with the framework — copy them from the
 
 ### Environment-specific links
 
-- [x] **DevOps Quick Start** (pipeline template, Emerald) — [bcgov/quickstart-openshift-emerald](https://github.com/bcgov/quickstart-openshift-emerald) · general: [bcgov/quickstart-openshift](https://github.com/bcgov/quickstart-openshift)
+- [x] **DevOps Quick Start** (pipeline template) — [bcgov/quickstart-openshift](https://github.com/bcgov/quickstart-openshift) · Emerald variant: [bcgov/quickstart-openshift-emerald](https://github.com/bcgov/quickstart-openshift-emerald)
 - [x] **Helm chart** repo — [bcgov/helm-charts](https://github.com/bcgov/helm-charts) *(the Quick Start line is moving toward OpenShift templates over Helm)*
 - [x] **STRA** service & intake — [CITZ Cybersecurity — STRA Service](https://bcgov.sharepoint.com/sites/CITZ-Cybersecurity/SitePages/STRA-Service.aspx) *(SharePoint, IDIR login)*
 - [x] **PIA** — [Complete a Privacy Impact Assessment](https://www2.gov.bc.ca/gov/content/governments/services-for-government/information-management-technology/privacy/privacy-impact-assessments/complete-a-privacy-impact-assessment)
