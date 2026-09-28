@@ -86,22 +86,18 @@ You don't need to read the whole site — you leave here with a task list. The f
 
 1. **Generate & review** — answer the questions, then go down the checklist. Click **`details ↗`** on anything unclear (opens in a new tab, so you don't lose your place).
 2. **Add evidence & tick** — for each item, paste an **evidence link** (repo / PR / doc) and tick it done. Evidence is **required** to mark an item complete. Progress **auto-saves in this browser**; use *Save / Load progress* to move it between machines.
-3. **Export what's left** — *Create one-pager of remaining items*, then add them as tasks in **ServiceNow** (via *Tasks for ServiceNow .csv*) or your tool of choice.
+3. **Export what's left** — *Create one-pager of remaining items*, then add them as tasks in your tracker (via *Task list .csv*) or paste them wherever the team works.
 4. **Report what's done** — *Verification report (.md)* lists completed items with their evidence — send it to the vendor / team for sign-off.
-5. **Prove it at handover** — the completed checklist *is* your [Production Readiness Review](../readiness/production-readiness-review.md); sign-off is recorded in the [ServiceNow readiness record](../reference/servicenow-process.md) and linked to the CMDB.
+5. **Prove it at handover** — the completed checklist *is* your [Production Readiness Review](../readiness/production-readiness-review.md); sign-off is recorded in the [readiness record](../reference/readiness-record.md) and linked to the CMDB.
 
 </div>
 
-??? note "How to load the list into ServiceNow"
-    **Simplest — any user, no special rights.** Download **Download for ServiceNow (.csv)**
-    (or *Copy remaining as text*), then on the application's **Readiness record** either
-    attach the file, paste the list into the work notes, or create one task per remaining
-    item.
-
-    **If you have import rights.** *System Import Sets → Load Data* → upload the CSV →
-    map the columns → run the transform. The CSV's headers already match ServiceNow task
-    fields (`short_description`, `description`, `priority`), so it maps with little fiddling.
-    Priority is pre-set: **2 (High)** for *Must* items, **3 (Moderate)** for *Should*.
+??? note "How to load the list into a task tracker"
+    Download **Task list (.csv)** (or *Copy remaining as text*). The CSV opens in Excel and
+    imports into most task trackers — its headers use common task fields
+    (`short_description`, `description`, `priority`), and priority is pre-set: **2 (High)** for
+    *Must* items and **3 (Moderate)** for *Should*. Or simply attach the file — or paste the
+    list — to the application's **readiness record**.
 
 !!! note "Coming soon — automatic verification"
     Today you self-report what's done. The [compliance scan](../reference/compliance-enforcement.md)

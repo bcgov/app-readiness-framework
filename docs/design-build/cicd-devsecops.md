@@ -116,12 +116,12 @@ Compliance is **measured**, not assumed:
    are not using the standard template or are missing required controls (no SAST, no
    image scan, no signing, etc.). Non-compliant repos are reported (and notified) daily.
 3. The result feeds the project's
-   [ServiceNow readiness record](../reference/servicenow-process.md).
+   [readiness record](../reference/readiness-record.md).
 4. **DORA metrics** (deployment frequency, lead time, change-failure rate, MTTR) track
    whether delivery is actually healthy over time.
 
 The full design — what's checked, how repos are identified, the notification and
-ServiceNow feedback loop, and the report-first rollout — is on the
+readiness-record feedback loop, and the report-first rollout — is on the
 **[Compliance & Enforcement](../reference/compliance-enforcement.md)** page.
 
 !!! note "Rollout"

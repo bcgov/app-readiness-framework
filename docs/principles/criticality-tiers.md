@@ -62,7 +62,7 @@ Pick the **highest** tier for which *any* statement is true:
 - **Tier 3** otherwise: limited audience, low impact if briefly unavailable.
 
 When in doubt, classify **up** and discuss with the architecture team. Record the tier
-and the reasoning in the [ServiceNow readiness record](../reference/servicenow-process.md)
+and the reasoning in the [readiness record](../reference/readiness-record.md)
 and, ideally, an ADR.
 
 !!! note "Data classification is related but separate"

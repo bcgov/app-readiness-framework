@@ -105,14 +105,14 @@ teams build the right thing the first time.
 
     [:octicons-arrow-right-24: Pass the gate](readiness/production-readiness-review.md)
 
--   :material-clipboard-check-outline:{ .lg .middle } &nbsp; __ServiceNow tracking__
+-   :material-clipboard-check-outline:{ .lg .middle } &nbsp; __Readiness tracking__
 
     ---
 
     How each project's readiness is recorded, signed off, and linked to the CMDB — the
     "who applied it to which project" audit trail.
 
-    [:octicons-arrow-right-24: The process](reference/servicenow-process.md)
+    [:octicons-arrow-right-24: The process](reference/readiness-record.md)
 
 -   :material-shield-lock:{ .lg .middle } &nbsp; __Security &amp; privacy__
 
@@ -202,7 +202,7 @@ A document alone does not change behaviour. The expectations here are backed by:
 
 1. **Reusable pipeline &amp; Helm templates** that bake in the mandatory build-time controls.
 2. **An automated compliance scan** that flags repositories not using the standard templates.
-3. **A ServiceNow readiness record** that tracks per-project sign-off and links to the CMDB.
+3. **A readiness record** that tracks per-project sign-off and links to the CMDB.
 4. **Contract / SOW clauses** that make the mandatory items contractual deliverables.
 
 ---

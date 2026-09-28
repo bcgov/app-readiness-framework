@@ -2,7 +2,7 @@
 
 !!! note "Environment links (verified 2026-09-23)"
     The BC Gov standards, repos and intake points are linked below. A few are internal
-    (IDIR / SharePoint login) or handled inside ServiceNow and are marked as such. Two are
+    (IDIR / SharePoint login) or handled inside internal ITSM and are marked as such. Two are
     still open (`TODO`) because no public page was found.
 
 ### Provided by the framework

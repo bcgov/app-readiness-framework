@@ -48,7 +48,7 @@ Before solutioning is locked in:
 ### Step 4 — Prove it and hand it over (before go-live)
 Work through the **[Production Readiness Review](readiness/production-readiness-review.md)**.
 Every item asks for **evidence — a link, a report, a test result — not a yes/no claim.**
-When complete, sign-off is recorded in **[ServiceNow](reference/servicenow-process.md)**
+When complete, sign-off is recorded in **[readiness record](reference/readiness-record.md)**
 and linked to the CMDB. That record is the audit trail of *who confirmed what, and when*.
 
 ---
@@ -96,7 +96,7 @@ extras. Which are mandatory depends on your **[tier](principles/criticality-tier
 
 - A `MUST` that isn't met **blocks the relevant gate**.
 - An exception is possible only via an **explicit, time-boxed waiver** with a named owner
-  and a remediation date, recorded in the ServiceNow readiness record.
+  and a remediation date, recorded in the readiness record.
 - A `SHOULD` you're deviating from must be **justified in an ADR**.
 
 This is not bureaucracy for its own sake — it's how we make sure an application can
@@ -113,5 +113,5 @@ backlog — resilience and observability first.
 
 <p style="text-align:center; color: var(--md-default-fg-color--light); font-size:.85rem;">
 Questions about applying this to a specific project? Contact Architecture &amp; Platform
-Engineering — and start the ServiceNow readiness record early.
+Engineering — and start the readiness record early.
 </p>

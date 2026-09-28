@@ -26,7 +26,7 @@ catches the team that didn't — independent of whether they ran anything.
 
 A **nightly** job that, for every repository tagged with the `app-readiness` GitHub
 topic, checks each mandatory control, records the result, notifies owners of gaps, and
-updates the [ServiceNow readiness record](servicenow-process.md).
+updates the [readiness record](readiness-record.md).
 
 ### What it checks — and how
 
@@ -56,7 +56,7 @@ isn't is itself a finding.
 2. A **daily notification** to each non-compliant repo's owners listing the specific gaps.
 3. A **fleet roll-up** — compliant vs non-compliant across all services.
 
-## The feedback loop into ServiceNow
+## The feedback loop into the readiness record
 
 The scan writes its result back to the readiness record, so the checklist's build-time
 items **tick themselves** and status is tracked, not claimed:
@@ -70,13 +70,13 @@ graph LR
     R[Repos tagged<br/>app-readiness] --> S[Nightly<br/>compliance scan]
     S --> RP[Compliance report<br/>pass / fail per check]
     RP --> N[Notify owners<br/>of gaps]
-    RP --> SN[Update ServiceNow<br/>readiness record]
+    RP --> SN[Update the<br/>readiness record]
     SN --> D[Fleet report]
 ```
 
 > The scan runs as a scheduled GitHub Actions workflow from a central ops repo: it enumerates
 > repos tagged `app-readiness`, checks each mandatory control, and reports the gaps
-> (report-only first, then wired to the ServiceNow readiness record).
+> (report-only first, then wired to the readiness record).
 
 ## When a repo is non-compliant
 

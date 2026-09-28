@@ -72,7 +72,7 @@ graph LR
 You own the *content*. A developer is only needed to change *how the tool behaves*:
 
 - New **platform tooling** (e.g. adding a new platform and its monitoring/logging tool).
-- The tool's **layout, styling, or exports** (PDF, ServiceNow CSV, etc.).
+- The tool's **layout, styling, or exports** (PDF, task CSV, etc.).
 - Refreshing the **Excel copy** after a CSV change — one command,
   `python scripts/build-checklist-xlsx.py` (see [Maintaining the Checklist](maintaining-the-checklist.md)).
 

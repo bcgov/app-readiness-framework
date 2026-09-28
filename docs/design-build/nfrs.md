@@ -74,7 +74,7 @@ applications unsupportable later.
 
 ## NFR worksheet
 
-Copy this into the project's design docs / ServiceNow readiness record and fill it in.
+Copy this into the project's design docs / readiness record and fill it in.
 Replace the examples with agreed, measured values.
 
 | NFR | Question to the business | Target (fill in) | Tier driver |

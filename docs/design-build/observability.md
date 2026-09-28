@@ -80,7 +80,7 @@ calls that a single service's metrics will never reveal.
 ## 5. Alerting
 
 **MUST:** alerts are **actionable** and **route to the on-call owner** named in the
-[readiness record](../reference/servicenow-process.md).
+[readiness record](../reference/readiness-record.md).
 
 - Alert on **symptoms and SLO burn** (users are affected), not on every transient blip —
   noisy alerts get muted, and a muted alert is worse than none.

@@ -39,7 +39,7 @@
     /* --- Design & decisions (G1) --- */
     I("design", "Assign & justify a criticality tier",
       "Decides which guardrails apply and right-sizes cost \u2014 don't over- or under-build.",
-      "Tier + written rationale in the ServiceNow readiness record and an ADR.",
+      "Tier + written rationale in the readiness record and an ADR.",
       ["M","M","M"], { link: "../../principles/criticality-tiers/" }),
     I("design", "Capture non-functional requirements (RTO/RPO, performance)",
       "NFRs drive design and cost and are the thing most often missed.",
@@ -144,7 +144,7 @@
     I("operability", "Register & manage change",
       "The CMDB is where apps are tracked; change needs control and a rollback authority.",
       "CMDB CI + change/release process + named rollback authority.",
-      ["M","M","S"], { covers: "CMDB registration \u00b7 change / release management \u00b7 rollback authority", link: "../../reference/servicenow-process/" }),
+      ["M","M","S"], { covers: "CMDB registration \u00b7 change / release management \u00b7 rollback authority", link: "../../reference/readiness-record/" }),
     I("operability", "Service Desk & handover",
       "The front line takes the calls; defects and training must transfer.",
       "Service Desk enabled (script/KB/escalation) + defect tombstone list + user docs/training.",
@@ -265,14 +265,14 @@
       (cfg.build === "existing" ? " · retrofit" : "");
   }
 
-  // ServiceNow-friendly CSV: the column names match standard task fields, so a
-  // ServiceNow Import Set auto-maps them. Opens fine in Excel for any other tool too.
+  // Task CSV: the column names match common task-tracker fields, so a
+  // most task trackers can auto-map them. Opens fine in Excel for any other tool too.
   function toCsv(cfg, rows) {
     var app = cfg.app || "Application";
     var out = [["short_description", "description", "priority", "section", "gate"]];
     rows.forEach(function (r) {
       var m = sectionMeta(r.item.section);
-      var prio = r.ob === "M" ? "2" : "3";   // ServiceNow priority: 2 = High (Must), 3 = Moderate (Should)
+      var prio = r.ob === "M" ? "2" : "3";   // priority: 2 = High (Must), 3 = Moderate (Should)
       var desc = "Why: " + r.item.why + "  Evidence: " + r.item.evidence +
                  "  [" + LABELS[r.ob] + " | " + m[1] + " | Gate " + m[2] + "]";
       out.push(["[" + app + "] " + r.item.title, desc, prio, m[1], m[2]]);
@@ -283,7 +283,7 @@
   function toMarkdownList(cfg, rows) {
     var by = group(rows);
     var h = "# Readiness items — " + (cfg.app || "Application") + "\n\n> " +
-      metaLine(cfg) + " · " + rows.length + " items\n>\n> Add these to ServiceNow, JIRA, or your tool of choice.\n";
+      metaLine(cfg) + " · " + rows.length + " items\n>\n> Add these to your task tracker of choice.\n";
     SECTIONS.forEach(function (s) {
       var items = by[s[0]];
       if (!items || !items.length) return;
@@ -300,7 +300,7 @@
     var by = group(rows);
     var lines = ["Readiness items — " + (cfg.app || "Application"), metaLine(cfg),
       rows.length + " items to action", "",
-      "Add these to ServiceNow, JIRA, or your tool of choice.", ""];
+      "Add these to your task tracker of choice.", ""];
     SECTIONS.forEach(function (s) {
       var items = by[s[0]];
       if (!items || !items.length) return;
@@ -581,7 +581,7 @@
     var h = '<div class="arr-op-actions">' +
       '<button class="md-button md-button--primary arr-op-pdf">Export as PDF</button>' +
       '<button class="md-button arr-op-copy">Copy as text</button>' +
-      '<span class="arr-op-note">Add these to ServiceNow, JIRA, or your tool of choice.</span></div>' +
+      '<span class="arr-op-note">Add these to your task tracker of choice.</span></div>' +
       '<div class="arr-op-sheet"><div class="arr-op-title"><h2>Remaining readiness items</h2>' +
       '<p class="arr-op-app">' + esc(cfg.app || "Application") + '</p>' +
       '<p class="arr-op-meta">' + esc(metaLine(cfg)) + ' &middot; ' + rows.length + ' items to action</p></div>';
@@ -713,7 +713,7 @@
       '<button class="md-button md-button--primary arr-op-btn">Create one-pager of remaining items</button>' +
       '<button class="md-button arr-full-pdf">Full checklist (PDF)</button>' +
       '<button class="md-button arr-report-btn">Verification report (.md)</button>' +
-      '<button class="md-button arr-dl" data-fmt="csv">Tasks for ServiceNow (.csv)</button>' +
+      '<button class="md-button arr-dl" data-fmt="csv">Task list (.csv)</button>' +
       '</div>';
 
     html += '<div class="arr-gen-progressbar">' +
@@ -806,7 +806,7 @@
 
     out.querySelectorAll(".arr-dl").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        download(slug(cfg.app || "application") + "-readiness-servicenow.csv", "text/csv", toCsv(cfg, remainingRows(out)));
+        download(slug(cfg.app || "application") + "-readiness-tasks.csv", "text/csv", toCsv(cfg, remainingRows(out)));
       });
     });
 

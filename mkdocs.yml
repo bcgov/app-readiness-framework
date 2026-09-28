@@ -125,7 +125,7 @@ nav:
       - Production Readiness Review: readiness/production-readiness-review.md
   - Runbook Template: starters/index.md
   - Reference:
-      - ServiceNow Process: reference/servicenow-process.md
+      - Readiness Record: reference/readiness-record.md
       - Compliance & Enforcement: reference/compliance-enforcement.md
       - Change the Checklist (no code): reference/change-the-checklist.md
       - Maintaining the Checklist: reference/maintaining-the-checklist.md

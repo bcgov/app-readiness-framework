@@ -6,7 +6,7 @@ handover checklist: instead of paperwork filled in at the end, it confirms that 
 guardrails were actually followed and that the application is genuinely operable.
 
 !!! info "How it's run"
-    The PRR is recorded as a **[ServiceNow readiness record](../reference/servicenow-process.md)**,
+    The PRR is recorded as a **[readiness record](../reference/readiness-record.md)**,
     opened early and completed as evidence accumulates. Operations/SRE reviews and
     signs off. Depth scales by [criticality tier](../principles/criticality-tiers.md):
     Tier 3 is lightweight; Tier 1/2 require the full review with evidence attached.
@@ -27,7 +27,7 @@ a yes/no — that evidence is what Operations/SRE signs off against.
 
 ## Sign-off
 
-Record the decision here and in the ServiceNow readiness record.
+Record the decision here and in the readiness record.
 
 | Role | Name | Decision | Date |
 |---|---|---|---|

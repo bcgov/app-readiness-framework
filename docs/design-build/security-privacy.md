@@ -80,7 +80,7 @@ Detection is largely automated in the [pipeline](cicd-devsecops.md#the-mandatory
 | **Low** | 90 days / next release | Next release |
 
 > These are baseline targets — record the agreed SLAs and the accountable owner in the
-> [readiness record](../reference/servicenow-process.md). An unremediated Critical or High
+> [readiness record](../reference/readiness-record.md). An unremediated Critical or High
 > past its SLA blocks the gate.
 
 ## 6. TLS & configuration hardening
