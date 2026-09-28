@@ -7,6 +7,14 @@ copyright: Internal use only — Government of British Columbia
 
 site_url: https://bcgov.github.io/app-readiness-framework/
 
+# Catch broken cross-references at build time (incl. #anchors, which --strict
+# does not check by default). Keeps links from silently rotting.
+validation:
+  links:
+    absolute_links: warn
+    unrecognized_links: warn
+    anchors: warn
+
 theme:
   name: material
   language: en
