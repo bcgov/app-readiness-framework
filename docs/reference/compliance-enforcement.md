@@ -54,7 +54,7 @@ isn't is itself a finding.
 
 1. A **compliance report** — machine-readable JSON plus a human-readable summary, per repo, per check.
 2. A **daily notification** to each non-compliant repo's owners listing the specific gaps.
-3. A **fleet roll-up** — compliant vs non-compliant across all services (feeds the [portfolio dashboard](../dashboard.md)).
+3. A **fleet roll-up** — compliant vs non-compliant across all services.
 
 ## The feedback loop into ServiceNow
 
@@ -71,7 +71,7 @@ graph LR
     S --> RP[Compliance report<br/>pass / fail per check]
     RP --> N[Notify owners<br/>of gaps]
     RP --> SN[Update ServiceNow<br/>readiness record]
-    SN --> D[Fleet dashboard]
+    SN --> D[Fleet report]
 ```
 
 > The scan runs as a scheduled GitHub Actions workflow from a central ops repo: it enumerates

@@ -60,7 +60,7 @@ See [Criticality Tiers](../principles/criticality-tiers.md) for the classificati
 |---|---|---|
 | Current gate | `u_current_gate` | `g1` — Design · `g2` — Build · `g3` — PRR · `g4` — Operate |
 | Status | `u_status` | `draft` · `in_review` · `conditional` · `approved` |
-| Target go-live | `u_target_golive` | Date. Used in the portfolio dashboard. |
+| Target go-live | `u_target_golive` | Date. Used for go-live planning. |
 
 ### Availability targets
 
@@ -150,8 +150,6 @@ real scenarios. Replace these with your actual portfolio before go-live.
 | ARR0001002 | Permit Lookup Service | 3 | G4 — Operate | **Approved** | 100% |
 | ARR0001003 | Benefits Intake Portal | 2 | G1 — Design | Draft | 10% |
 | ARR0001004 | Legacy Claims Engine (retrofit gap-assessment) | 1 | G3 — PRR | Conditional | 40% |
-
-These are the same records shown in the [Portfolio Dashboard](../dashboard.md).
 
 ---
 
