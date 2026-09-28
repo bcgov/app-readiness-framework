@@ -74,8 +74,9 @@ graph LR
     SN --> D[Fleet dashboard]
 ```
 
-> The scan itself ships as a starter you can run — see
-> [Templates & Starters → Compliance scan](../starters/index.md#compliance-scan-scheduled).
+> The scan runs as a scheduled GitHub Actions workflow from a central ops repo: it enumerates
+> repos tagged `app-readiness`, checks each mandatory control, and reports the gaps
+> (report-only first, then wired to the ServiceNow readiness record).
 
 ## When a repo is non-compliant
 

@@ -5,16 +5,14 @@
     (IDIR / SharePoint login) or handled inside ServiceNow and are marked as such. Two are
     still open (`TODO`) because no public page was found.
 
-### Ready to use (in this framework)
-These starters ship with the framework — copy them from the
-[Templates & Starters](../starters/index.md) page:
+### Provided by the framework
+- [x] **Runbook template** — [copy it here](../starters/index.md). This is the one template
+  the framework supplies, because there is no BC Gov runbook standard.
 
-- [x] **ADR template** — [Templates → ADR](../starters/index.md#architecture-decision-record-adr)
-- [x] **Runbook template** — [Templates → Runbook](../starters/index.md#runbook)
-- [x] **NFR worksheet** — [Templates → NFR worksheet](../starters/index.md#nfr-worksheet)
-- [x] **Starter CI/CD pipeline** — [Templates → CI/CD](../starters/index.md#starter-cicd-pipeline)
-- [x] **Helm deployment (resilience defaults)** — [Templates → Helm](../starters/index.md#helm-deployment-resilience-defaults)
-- [x] **PR template + CODEOWNERS** — [Templates](../starters/index.md#pull-request-template)
+The compliant **CI/CD pipeline, Helm chart, and automated testing** come from the BC Gov
+**DevOps Quick Start** (see the environment-specific links below) — not hand-rolled here.
+For **ADRs**, use the bcgov [visitz-api decisions](https://github.com/bcgov/visitz-api/tree/main/docs/decisions)
+as the worked example.
 
 ### Environment-specific links
 

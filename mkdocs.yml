@@ -126,7 +126,7 @@ nav:
       - Data Management: design-build/data-management.md
   - Readiness & Handover:
       - Production Readiness Review: readiness/production-readiness-review.md
-  - Templates & Starters: starters/index.md
+  - Runbook Template: starters/index.md
   - Reference:
       - ServiceNow Process: reference/servicenow-process.md
       - Compliance & Enforcement: reference/compliance-enforcement.md

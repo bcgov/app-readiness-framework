@@ -122,9 +122,7 @@ Compliance is **measured**, not assumed:
 
 The full design — what's checked, how repos are identified, the notification and
 ServiceNow feedback loop, and the report-first rollout — is on the
-**[Compliance & Enforcement](../reference/compliance-enforcement.md)** page. The scan
-itself ships as a runnable starter:
-[Templates & Starters → Compliance scan](../starters/index.md#compliance-scan-scheduled).
+**[Compliance & Enforcement](../reference/compliance-enforcement.md)** page.
 
 !!! note "Rollout"
     The scan starts **report-only** (piloted on CSA, then the OpenShift fleet as a gap
