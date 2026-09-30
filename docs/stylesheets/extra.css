@@ -187,6 +187,13 @@
 [data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
   background: #16324f;
 }
+/* Bold/inline text inside the navy header row must stay white — otherwise the
+   strong-colour rule below renders it black-on-navy (a11y contrast fail). */
+.md-typeset table:not([class]) th strong,
+.md-typeset table:not([class]) th b,
+.md-typeset table:not([class]) th em,
+.md-typeset table:not([class]) th code,
+.md-typeset table:not([class]) th a { color: #fff; }
 .md-typeset table:not([class]) tr:nth-child(even),
 .md-typeset table:not([class]) tbody tr:nth-child(even) {
   background: var(--md-default-fg-color--lightest);
