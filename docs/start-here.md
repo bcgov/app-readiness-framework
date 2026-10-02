@@ -30,16 +30,16 @@ this site is right-sized by that tier.
 ### Step 2 — Design it right (before you write code)
 Before solutioning is locked in:
 
-- Capture **[non-functional requirements](design-build/nfrs.md)** — including the
+- Capture **non-functional requirements** — including the
   **RTO/RPO** conversation that drives cost. Use the worksheet.
 - Record key decisions as **ADRs** in the repo.
-- Plan for **[resilience](design-build/application-resilience.md)** from the start —
+- Plan for **resilience** from the start —
   statelessness, timeouts, retries, probes, graceful shutdown.
 - Complete a **threat model**; submit the **STRA** (and a **PIA** if you handle personal
   information).
 
 ### Step 3 — Build to the guardrails (continuously)
-- Use the **standard [CI/CD pipeline template](design-build/cicd-devsecops.md)** — it
+- Use the **standard CI/CD pipeline template** — it
   bakes in the mandatory controls (tests + coverage, SAST, SCA, secret scanning, image
   scanning, **SBOM**, artifact **signing**) so you don't assemble them yourself.
 - No secrets in source or environment variables with literal values — all runtime secrets **MUST** be stored in and injected from **HashiCorp Vault**.
@@ -62,7 +62,7 @@ extras. Which are mandatory depends on your **[tier](principles/criticality-tier
 | # | Deliverable | Gate | Notes |
 |---|---|---|---|
 | 1 | Assigned **criticality tier**, justified | G1 | Drives everything else |
-| 2 | Completed **NFR worksheet** (incl. RTO/RPO, perf targets) | G1 | [Template](design-build/nfrs.md) |
+| 2 | Completed **NFR worksheet** (incl. RTO/RPO, perf targets) | G1 | Template |
 | 3 | **Architecture diagram + ADRs** in the repo | G1 | Decisions, not just diagrams |
 | 3a | **Solution & feature documentation** — full feature set, existing + new | G1→G3 | **(SOW)** — replaces FDD; whole solution, not just the delta |
 | 3b | **Release notes / changelog** — new, changed, removed features | G3 | Old-vs-new always traceable |

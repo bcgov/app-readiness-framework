@@ -114,13 +114,6 @@ nav:
   - Build Your Checklist: checklist/checklist-generator.md
   - Principles:
       - Criticality Tiers: principles/criticality-tiers.md
-  - Design & Build:
-      - Non-Functional Requirements: design-build/nfrs.md
-      - CI/CD & DevSecOps: design-build/cicd-devsecops.md
-      - Application Resilience: design-build/application-resilience.md
-      - Security & Privacy: design-build/security-privacy.md
-      - Observability: design-build/observability.md
-      - Data Management: design-build/data-management.md
   - Readiness & Handover:
       - Production Readiness Review: readiness/production-readiness-review.md
   - Runbook Template: starters/index.md
@@ -129,4 +122,3 @@ nav:
       - Compliance & Enforcement: reference/compliance-enforcement.md
       - Change the Checklist (no code): reference/change-the-checklist.md
       - Maintaining the Checklist: reference/maintaining-the-checklist.md
-      - Standards & Links: reference/standards-links.md

@@ -69,33 +69,6 @@ teams build the right thing the first time.
 
     [:octicons-arrow-right-24: Pick your tier](principles/criticality-tiers.md)
 
--   :material-shield-bug:{ .lg .middle } &nbsp; __Application resilience__
-
-    ---
-
-    The 12 patterns that prevent most production incidents: statelessness, timeouts,
-    safe retries, idempotency, circuit breakers, probes, graceful shutdown, and more.
-
-    [:octicons-arrow-right-24: Build it to stay up](design-build/application-resilience.md)
-
--   :material-pipe:{ .lg .middle } &nbsp; __CI/CD &amp; DevSecOps__
-
-    ---
-
-    The mandatory pipeline attributes — tests, SAST/SCA/secret/image scanning, SBOM,
-    signing — plus reusable templates with an approved "out".
-
-    [:octicons-arrow-right-24: Pipeline standards](design-build/cicd-devsecops.md)
-
--   :material-format-list-checks:{ .lg .middle } &nbsp; __Non-functional requirements__
-
-    ---
-
-    Each NFR defined, the right question to ask the business, and a fillable worksheet
-    — including the RTO/RPO conversation that drives cost.
-
-    [:octicons-arrow-right-24: Capture your NFRs](design-build/nfrs.md)
-
 -   :material-rocket-launch:{ .lg .middle } &nbsp; __Production readiness review__
 
     ---
@@ -114,32 +87,6 @@ teams build the right thing the first time.
 
     [:octicons-arrow-right-24: The process](reference/readiness-record.md)
 
--   :material-shield-lock:{ .lg .middle } &nbsp; __Security &amp; privacy__
-
-    ---
-
-    Auth models (IDIR / Keycloak / BC Services Card), access management, data
-    classification, STRA/PIA, encryption, and vulnerability-management SLAs.
-
-    [:octicons-arrow-right-24: Secure it by design](design-build/security-privacy.md)
-
--   :material-chart-line:{ .lg .middle } &nbsp; __Observability__
-
-    ---
-
-    Metrics in Sysdig, structured logs to the Hive, tracing, SLIs/SLOs, and alerts
-    that are actionable and routed to the on-call owner.
-
-    [:octicons-arrow-right-24: Make it observable](design-build/observability.md)
-
--   :material-database-cog:{ .lg .middle } &nbsp; __Data management__
-
-    ---
-
-    Governance roles, classification, records management, retention/archival/deletion,
-    data interoperability, and reporting — the data outlives the app.
-
-    [:octicons-arrow-right-24: Govern the data](design-build/data-management.md)
 
 </div>
 
@@ -158,8 +105,8 @@ graph LR
 
 | Gate | When | Owner | What it checks |
 |---|---|---|---|
-| **G1 · Design** | Before build | Architect / ARB | Tier, [NFRs](design-build/nfrs.md), resilience approach, ADRs, threat model |
-| **G2 · Build** | Continuously in CI/CD | Pipeline (automated) | Tests + coverage, [SAST/SCA/secret/image scans](design-build/cicd-devsecops.md), SBOM, signing |
+| **G1 · Design** | Before build | Architect / ARB | Tier, NFRs, resilience approach, ADRs, threat model |
+| **G2 · Build** | Continuously in CI/CD | Pipeline (automated) | Tests + coverage, SAST/SCA/secret/image scans, SBOM, signing |
 | **G3 · Production Readiness** | Before go-live | Operations / SRE | [PRR](readiness/production-readiness-review.md): SLOs, runbook, DR test, observability, CMDB |
 | **G4 · Operate** | Ongoing | Product owner / vendor | DORA metrics, patch SLAs, compliance scan, postmortems |
 

@@ -9,7 +9,7 @@ decides which `MUST`s apply.**
     Don't ask the business *"do you want high availability?"* — they will always say
     *"24/7, 365."* Ask **how long they can actually be down before there is real harm**,
     and **how much data they can afford to lose**. Those answers set the tier, the
-    [RTO/RPO](../design-build/nfrs.md), and ultimately the cost.
+    RTO/RPO, and ultimately the cost.
 
 ## The tiers
 
@@ -23,7 +23,7 @@ decides which `MUST`s apply.**
 | **Audience** | Often public / external | Internal staff | Internal, small group |
 
 > These thresholds are starting points. Record the agreed values as
-> [non-functional requirements](../design-build/nfrs.md); they are what actually
+> non-functional requirements; they are what actually
 > drive design and cost.
 
 ## What each tier requires
@@ -33,15 +33,15 @@ on each topic page.
 
 | Requirement area | Tier 3 | Tier 2 | Tier 1 |
 |---|---|---|---|
-| **[CI/CD pipeline](../design-build/cicd-devsecops.md)** with SAST, SCA, secret + image scanning | MUST | MUST | MUST |
+| **CI/CD pipeline** with SAST, SCA, secret + image scanning | MUST | MUST | MUST |
 | **Automated test coverage** | SHOULD (≥ 70%) | MUST (≥ 80%) | MUST (≥ 85%) |
 | **SBOM + signed artifacts + provenance** | SHOULD | MUST | MUST |
-| **[Resilience patterns](../design-build/application-resilience.md)** (timeouts, retries, circuit breakers, graceful shutdown) | SHOULD | MUST | MUST |
+| **Resilience patterns** (timeouts, retries, circuit breakers, graceful shutdown) | SHOULD | MUST | MUST |
 | **Stateless / externalised session** | SHOULD | MUST | MUST |
 | **Multiple replicas + PodDisruptionBudget** | MAY | MUST | MUST |
 | **HA database / replication** | MAY | SHOULD | MUST |
 | **Disaster recovery plan + tested restore** | SHOULD | MUST | MUST |
-| **[Observability](../design-build/observability.md)** (metrics, logs, traces) + alerting | SHOULD | MUST | MUST |
+| **Observability** (metrics, logs, traces) + alerting | SHOULD | MUST | MUST |
 | **SLIs/SLOs + error budget** | MAY | SHOULD | MUST |
 | **Load / performance test evidence** | MAY | SHOULD | MUST |
 | **Chaos / failover test evidence** | — | SHOULD | MUST |

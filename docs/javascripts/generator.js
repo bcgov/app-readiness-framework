@@ -44,7 +44,7 @@
     I("design", "Capture non-functional requirements (RTO/RPO, performance)",
       "NFRs drive design and cost and are the thing most often missed.",
       "Completed NFR worksheet in the repo.",
-      ["M","M","S"], { link: "../../design-build/nfrs/" }),
+      ["M","M","S"], { link: "https://www2.gov.bc.ca/gov/content/governments/policies-for-government/core-policy/policies/business-continuity-management" }),
     I("design", "Record architecture decisions (ADRs) + architecture diagram",
       "Decisions must be traceable, not just diagrammed.",
       "/adr folder + diagram in the repo.",
@@ -52,7 +52,7 @@
     I("design", "Threat model + STRA (and PIA if personal information)",
       "Security & privacy risk must be assessed before build, not at go-live.",
       "STRA (+PIA) reference and status.",
-      ["M","M","S"], { link: "../../design-build/security-privacy/" }),
+      ["M","M","S"], { link: "https://bcgov.sharepoint.com/sites/CITZ-Cybersecurity/SitePages/STRA-Service.aspx" }),
     I("design", "Solution & interface documentation",
       "Support needs the whole solution; old-vs-new must be traceable; dependencies visible.",
       "Living solution doc + changelog + integrations. In-house = Must; COTS = link the vendor's changelog.",
@@ -70,15 +70,15 @@
     I("build", "Use the standard CI/CD pipeline (BC Gov Quick Start template)",
       "One compliant pipeline bakes in everything below \u2014 don't reinvent it as 14 separate items.",
       "Repo on the Quick Start template, or GitHub Actions containing these stages.",
-      ["M","M","M"], { covers: "Build \u00b7 unit/integration tests \u00b7 SAST \u00b7 SCA \u00b7 secret scan \u00b7 image scan \u00b7 SBOM \u00b7 signing \u00b7 provenance \u00b7 DAST \u00b7 licence check \u00b7 dependency currency \u00b7 signed commits \u00b7 branch protection", link: "../../design-build/cicd-devsecops/" }),
+      ["M","M","M"], { covers: "Build \u00b7 unit/integration tests \u00b7 SAST \u00b7 SCA \u00b7 secret scan \u00b7 image scan \u00b7 SBOM \u00b7 signing \u00b7 provenance \u00b7 DAST \u00b7 licence check \u00b7 dependency currency \u00b7 signed commits \u00b7 branch protection", link: "https://github.com/bcgov/quickstart-openshift" }),
     I("build", "Enforce test coverage & test strategy",
       "Coverage decays without a gate; contract tests protect integrations.",
       "Coverage gate \u2014 in-house 85% (T1/T2); COTS/contracted = report only.",
-      ["M","M","S"], { covers: "Coverage gate \u00b7 unit / integration / contract tests \u00b7 UAT \u00b7 test data", link: "../../design-build/cicd-devsecops/#the-mandatory-pipeline-attributes" }),
+      ["M","M","S"], { covers: "Coverage gate \u00b7 unit / integration / contract tests \u00b7 UAT \u00b7 test data", link: "https://github.com/bcgov/quickstart-openshift" }),
     I("build", "Externalise configuration & secrets; deploy via IaC / GitOps",
       "Config in images or changed by hand causes drift; secrets never belong in code.",
       "Config per environment + managed secrets store ({{SECRETS}}) + IaC in the repo.",
-      ["M","M","S"], { covers: "Externalised config \u00b7 managed secrets \u00b7 IaC \u00b7 GitOps", link: "../../design-build/cicd-devsecops/" }),
+      ["M","M","S"], { covers: "Externalised config \u00b7 managed secrets \u00b7 IaC \u00b7 GitOps", link: "https://developer.gov.bc.ca/docs/default/component/platform-developer-docs/docs/secrets-management/vault-secrets-management-service/" }),
     I("build", "Follow Salesforce build practices",
       "Salesforce enforces hard per-transaction limits and deploys metadata, not containers.",
       "Bulkified code + documented sandbox & deployment path.",
@@ -92,37 +92,37 @@
     I("resilience", "Prove resilience & performance",
       "Peak load and failure are where apps fall over \u2014 prove it before users do.",
       "Load/performance test to peak + chaos/failover test + capacity/autoscaling validation.",
-      ["M","S","Y"], { covers: "Load / peak test \u00b7 chaos / failover test \u00b7 capacity & autoscaling validation", link: "../../design-build/application-resilience/" }),
+      ["M","S","Y"], { covers: "Load / peak test \u00b7 chaos / failover test \u00b7 capacity & autoscaling validation", link: "https://developer.gov.bc.ca/docs/default/component/platform-developer-docs/docs/automation-and-resiliency/prepare-to-load-test-application-on-openshift/" }),
 
     /* --- Data & DR (G3) --- */
     I("data", "Data governance",
       "Someone must own quality, definitions and access; classification drives controls.",
       "Classification + named Data Owner/Steward/Custodian + Data Interoperability engaged.",
-      ["M","M","S"], { covers: "Data classification \u00b7 Owner / Steward / Custodian \u00b7 Data Interoperability", link: "../../design-build/data-management/" }),
+      ["M","M","S"], { covers: "Data classification \u00b7 Owner / Steward / Custodian \u00b7 Data Interoperability", link: "https://www2.gov.bc.ca/gov/content/data/policy-standards/data-policies/data-management-policy" }),
     I("data", "Data lifecycle (retention / archival / deletion)",
       "Data can't grow forever; retention is legal / FOIPPA-driven.",
       "Retention/archival/deletion schedule implemented in the app.",
-      ["M","M","S"], { link: "../../design-build/data-management/#5-retention-archival-deletion" }),
+      ["M","M","S"], { link: "https://www2.gov.bc.ca/gov/content/data/information-management/information-schedules" }),
     I("data", "Backups & disaster recovery",
       "An untested backup is not a backup; you only know your RTO once you've failed over.",
       "HA data layer + tested restore (meets RPO) + DR/failover tested (Tier 1).",
-      ["M","M","S"], { covers: "HA data layer \u00b7 tested restore (RPO) \u00b7 DR / failover (RTO)", link: "../../design-build/application-resilience/#11-resilient-data-layer" }),
+      ["M","M","S"], { covers: "HA data layer \u00b7 tested restore (RPO) \u00b7 DR / failover (RTO)", link: "https://www2.gov.bc.ca/gov/content/governments/services-for-government/information-management-technology/information-security/defensible-security/security-directives/business-continuity-and-disaster-recovery-plan" }),
 
     /* --- Observability (G3) --- */
     I("observability", "Monitoring & logging",
       "You can't operate what you can't see.",
       "Metrics + dashboards ({{MONITOR}}) + structured logs with trace IDs ({{LOGS}}) + tracing.",
-      ["M","M","S"], { covers: "Metrics & dashboards \u00b7 structured logs \u00b7 distributed tracing", link: "../../design-build/observability/" }),
+      ["M","M","S"], { covers: "Metrics & dashboards \u00b7 structured logs \u00b7 distributed tracing", link: "https://developer.gov.bc.ca/docs/default/component/platform-developer-docs/docs/app-monitoring/" }),
     I("observability", "SLOs & alerting",
       "Alerts with no SLO or owner are just noise.",
       "SLIs/SLOs defined + actionable alerts routed to the on-call owner.",
-      ["M","S","Y"], { link: "../../design-build/observability/" }),
+      ["M","S","Y"], { link: "https://developer.gov.bc.ca/docs/default/component/platform-developer-docs/docs/app-monitoring/guidelines-for-sli-and-monitoring/" }),
 
     /* --- Security & access (G3) --- */
     I("security", "Authentication & access",
       "Use approved SSO; least-privilege RBAC; a defined access process.",
       "IDIR/Keycloak/BC Services Card + RBAC + access-management process (approvers/support).",
-      ["M","M","M"], { covers: "SSO (IDIR / Keycloak / BCSC) \u00b7 RBAC \u00b7 access-management process", link: "../../design-build/security-privacy/" }),
+      ["M","M","M"], { covers: "SSO (IDIR / Keycloak / BCSC) \u00b7 RBAC \u00b7 access-management process", link: "https://developer.gov.bc.ca/docs/default/component/css-docs/What-is-Keycloak-at-BC-Government/" }),
     I("security", "API management \u2014 use APS",
       "Govern endpoints centrally: auth, rate limiting/throttling, and versioning.",
       "APS (gov API gateway) config; versioned, backward-compatible API.",
@@ -130,11 +130,11 @@
     I("security", "Data protection & privacy",
       "Encrypt data, keep it in an approved region, and design for privacy (FOIPPA).",
       "TLS in transit + at-rest encryption + data residency + privacy-by-design notes.",
-      ["M","M","S"], { covers: "Encryption in transit & at rest \u00b7 data residency (in-Canada) \u00b7 privacy-by-design", link: "../../design-build/security-privacy/" }),
+      ["M","M","S"], { covers: "Encryption in transit & at rest \u00b7 data residency (in-Canada) \u00b7 privacy-by-design", link: "https://www2.gov.bc.ca/gov/content/governments/services-for-government/information-management-technology/privacy/personal-information" }),
     I("security", "Security testing & vulnerability management",
       "Independent testing catches what the pipeline misses; findings need a fix-by clock.",
       "Penetration test (orderable service) + TLS scan + owned vulnerability-management SLAs.",
-      ["M","S","Y"], { covers: "Penetration test \u00b7 TLS scan \u00b7 vulnerability-management SLAs", link: "../../design-build/security-privacy/#5-vulnerability-management" }),
+      ["M","S","Y"], { covers: "Penetration test \u00b7 TLS scan \u00b7 vulnerability-management SLAs", link: "https://www2.gov.bc.ca/gov/content/governments/services-for-government/information-management-technology/information-security/defensible-security/security-respiratory-controls/vulnerability-and-patch-management" }),
 
     /* --- Operability & support (G3) --- */
     I("operability", "Runbook & funded support model",
@@ -216,7 +216,7 @@
         why: resolveTokens(item.why, cfg.platform),
         evidence: resolveTokens(item.evidence, cfg.platform),
         covers: item.covers ? resolveTokens(item.covers, cfg.platform) : "",
-        link: item.link || SECTION_DOC[item.section] || "",
+        link: item.link || "",
         applies: appliesTag(item),
         key: item.section + "::" + slug(item.title)
       };
@@ -545,20 +545,6 @@
     return '<span class="arr-ob ' + cls + '">' + LABELS[ob] + '</span>';
   }
 
-  // Each section links out to its detailed best-practice page.
-  var SECTION_DOC = {
-    design: "../../design-build/nfrs/",
-    build: "../../design-build/cicd-devsecops/",
-    resilience: "../../design-build/application-resilience/",
-    data: "../../design-build/data-management/",
-    observability: "../../design-build/observability/",
-    security: "../../design-build/security-privacy/",
-    performance: "../../design-build/nfrs/#performance",
-    operability: "../../readiness/production-readiness-review/",
-    contractual: "../../readiness/production-readiness-review/",
-    cost: "../../readiness/production-readiness-review/"
-  };
-
   function fallbackCopy(text) {
     var ta = document.createElement("textarea");
     ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
@@ -729,7 +715,6 @@
       var key = s[0], label = s[1], gate = s[2];
       var items = by[key];
       if (!items || !items.length) return;
-      var docUrl = SECTION_DOC[key];
       html += '<div class="arr-gen-section"><h3>' + esc(label) +
               ' <span class="arr-gate">Gate ' + gate + '</span></h3><ul class="arr-gen-list">';
       items.forEach(function (r) {

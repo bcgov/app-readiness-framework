@@ -38,7 +38,7 @@ Each **row** of `checklist-items.csv` is one checklist item. The columns are:
 | **Covers** | Optional "what this rolls up" line — the sub-items a single row stands in for. |
 | **Tier 1 / Tier 2 / Tier 3** | When it applies per criticality tier: `Must`, `Should`, `Optional`, or `N/A`. |
 | **Applies to** | `All`, or restrict it: `Salesforce`, `OpenShift`, `Public cloud`, `Public-facing`, or `Vendor-built`. |
-| **More info** | The "More info ↗" link — a repo-relative path (`../../design-build/observability/`) or a full `https://…` URL. |
+| **More info** | The "More info ↗" link — a full `https://…` URL (an official BC Gov source), or a repo-relative path like `../../principles/criticality-tiers/`. |
 
 !!! note "Platform-aware wording"
     In any text column you can use the tokens `{{MONITOR}}`, `{{LOGS}}`, and `{{SECRETS}}`.
@@ -115,7 +115,7 @@ mkdocs serve
 - Keep titles action-oriented; keep **why** to one sentence.
 - A named tool is a **recommended default** — mandatory only where the platform provides
   it; otherwise allow an equivalent with an ADR (see the *Recommended vs required* note on
-  [Observability](../design-build/observability.md)).
+  Observability).
 - **AI assistants** (Claude, Copilot) can draft edits — paste the item and describe the
   change you want.
 - Big changes? Take them through a team review first so everyone can agree

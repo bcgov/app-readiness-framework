@@ -16,7 +16,7 @@ short, modelled on the overnight compliance job already proven on the AG OpenShi
 
 | Layer | Where | What it catches |
 |---|---|---|
-| **Build-time gates** | In each pipeline | A missing/failing control **breaks the build** — see [CI/CD & DevSecOps](../design-build/cicd-devsecops.md#the-mandatory-pipeline-attributes) |
+| **Build-time gates** | In each pipeline | A missing/failing control **breaks the build** — see CI/CD & DevSecOps |
 | **Org-wide scan** | Scheduled job across all repos | Repos that **bypass the standard** entirely — no pipeline, no scans, not on the template |
 
 The build-time gate only helps if a team uses the standard pipeline. The **scan** is what
@@ -99,7 +99,7 @@ Turning this on hard on day one would just generate noise and resentment. Phase 
    builds and changes.
 
 !!! tip "DORA alongside compliance"
-    Compliance says *"are the controls present?"* — [DORA
-    metrics](../design-build/cicd-devsecops.md#enforcement) (deploy frequency, lead time,
+    Compliance says *"are the controls present?"* — DORA
+    metrics (deploy frequency, lead time,
     change-failure rate, MTTR) say *"is delivery actually healthy?"* Track both; a repo can
     be compliant and still shipping badly.
